@@ -1,11 +1,11 @@
-from django.db import models
+from mongoengine import *
+from Events.models import Location, Event
+connect('eventify')
 
-# Create your models here.
-
-class User(models.Model):
-	fname = models.CharField(max_length=256, blank=True, default='')
-	lname = models.CharField(max_length=256, blank=True, default='')
-	email = models.CharField(max_length=256, blank=True, default='')
-	passw = models.CharField(max_length=256, blank=True, default='') #md5 thing check later
-
-	user_location = models.TextField() #location = #dictionary field mongoengine
+class User(Document):
+	fname 			= StringField(max_length=100)
+	lname			= StringField(max_length=100)
+	email 			= StringField(max_length=256)
+	passw 			= StringField(max_length=256)
+	user_location 	= EmbeddedDocumentField(Location)
+	favourites 		= ListField(ReferenceField(Event))

@@ -3,5 +3,6 @@ from .models import User
 
 class EventSerializer(DocumentSerializer):
 	class Meta:
-		model = User
-		fields = ('fname', 'lname', 'email', 'user_location')
+		model  = User
+		# fields = ('fname', 'lname', 'email', 'user_location', 'favourites')
+		depth  = 2
