@@ -5,8 +5,7 @@ connect('eventify')
 
 
 class Location(EmbeddedDocument):
-	name 		= StringField(max_length=100, required=True)
-	address 	= StringField(max_length=256)
+	address 	= StringField(max_length=256, required=True)
 	city 		= StringField(max_length=25)
 	country 	= StringField(max_length=16)
 	postal_code = StringField(max_length=15)

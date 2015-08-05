@@ -43,6 +43,9 @@ INSTALLED_APPS = (
     'rest_framework_mongoengine',
     'djcelery',
     'kombu.transport.django',
+    'Events',
+    'User',
+    'EventBriteAPIReader',
 )
 
 MIDDLEWARE_CLASSES = (
