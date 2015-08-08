@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import djcelery
+from mongoengine import connect
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,7 +46,6 @@ INSTALLED_APPS = (
     'kombu.transport.django',
     'Events',
     'User',
-    'EventBriteAPIReader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,3 +112,6 @@ STATIC_URL = '/static/'
 
 djcelery.setup_loader()
 BROKER_URL = 'django://'
+
+
+connect('eventify', host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")

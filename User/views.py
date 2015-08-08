@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from .models import User
+from .serializers import UserSerializer
+from rest_framework_mongoengine import generics as drfme_generics
 
-# Create your views here.
+class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
+	queryset = User.objects
+	# lookup_field = 'id'
+	serializer_class = UserSerializer
