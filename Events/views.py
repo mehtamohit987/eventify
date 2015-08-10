@@ -15,7 +15,7 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = EventSerializer
 
 class EventSearch(drfme_generics.ListAPIView):
-	pass
+	return 
 
 	# currently SEARCH FOR EVENT will be a view inside this app only
 	# def get(self, request, format=None):
