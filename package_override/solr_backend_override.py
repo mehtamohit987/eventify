@@ -46,7 +46,7 @@ class CustomSolrSearchBackend(SolrSearchBackend):
         We need not present suggestions when there is an absolute match.
         Suggestions are a dict when there is a complete match.List otherwise.
         """
-
+        
         processed_results = super(CustomSolrSearchBackend,self)._process_results(raw_results,highlight,result_class,distance_point)
         if processed_results.get('spelling_suggestion'):
             if isinstance(processed_results['spelling_suggestion'],dict):

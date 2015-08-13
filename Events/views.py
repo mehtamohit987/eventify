@@ -6,14 +6,55 @@ from Events.serializers import EventSerializer, EventSearchSerializer
 from Events.search_indexes import EventIndex
 from rest_framework_mongoengine import generics as drfme_generics
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 
-from drf_haystack.viewsets import HaystackViewSet
+from haystack.query import SearchQuerySet
+from haystack.inputs import AutoQuery, Exact, Clean
+# from drf_haystack.viewsets import HaystackViewSet
 
 
-class EventList(drfme_generics.ListCreateAPIView):
-    queryset = Event.objects
-    serializer_class = EventSerializer
+class EventList(generics.ListAPIView):
+	# queryset = SearchQuerySet().all()
+	serializer_class = EventSearchSerializer
+	paginate_by = 10
+	def get_queryset(self):
+		#print "here"
+		# request
+		# print self.request
+		D = self.request.GET
+		K = self.request.GET.viewkeys()
+		print dir(K)
+
+		q = D.get('q','')
+
+		results = SearchQuerySet().filter(content=AutoQuery(q))
+
+		
+		if 'city' in K:
+			results = results.narrow('city:'+ str(D.get('city'))) # (city= Exact(D.get('city')))
+		if 'country' in K:
+		 	results = results.narrow('country:'+str(D.get('country'))) # (country = Exact(D.get('country')))
+		
+
+		# if 'coordinates' in K:
+		#  	results = results.narrow('coordinates:' + str(D.get('coordinates')))
+		
+
+
+		# # if x == '':
+		# 	results = results.filter()
+		# if x == '':
+		# 	results = results.filter()
+		# if x == '':
+		# 	results = results.filter()
+
+		
+		# start_offset = int(self.request.GET.get('page',1))-1
+		# end_offset = self.paginate_by+start_offset
+		# results = results[start_offset:end_offset]
+
+		return results
 
 
 class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
@@ -21,9 +62,20 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	# lookup_field = 'id'
 	serializer_class = EventSerializer
 
-class EventSearch(HaystackViewSet):
-	index_models = [Dummy]
-	serializer_class = EventSearchSerializer
+# class customManager(models.Manager):
+# 	def get_queryset(self):
+# 		return SearchQuerySet().all()
+	
+# class EventSearch(ListAPIView):
+# 	objects= customManager
+			
+
+
+# class EventSearch(HaystackViewSet):
+# 	index_models = [Dummy]
+# 	serializer_class = EventSearchSerializer
+
+
 
 # class EventSearch(APIView):
 	

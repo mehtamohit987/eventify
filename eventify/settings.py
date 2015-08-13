@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'djcelery',
     'kombu.transport.django',
     'haystack',
-    'drf_haystack',
+    # 'drf_haystack',
     'Events',
     'User',
 )
@@ -121,7 +121,7 @@ connect('eventify')#, host='127.0.0.1', port=27017, username="eventifyUser", pas
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'package_override.solr_backend_override.CustomSolrEngine', # 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://172.16.65.217:8983/solr/event'
+        'URL': 'http://172.16.65.217:8983/solr/eventsearch'
         # ...or for multicore...
         # 'URL': 'http://127.0.0.1:8983/solr/mysite',
     },

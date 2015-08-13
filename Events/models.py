@@ -25,8 +25,8 @@ class Event(Document):
 	info_url 			= URLField()
 	created 			= DateTimeField(default=datetime.now())
 
-	# django_id			= SequenceField()
-	# django_ct 			= StringField(max_length=13, default='Events.dummy')
+	django_id			= IntField(default=1)
+	django_ct 			= StringField(max_length=13, default='Events.dummy')
 
 
 	meta 				= {

@@ -8,7 +8,7 @@ from rest_framework.renderers import JSONRenderer
 # connect('eventify', host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
 
 
-start = 24
+start = 16
 start_date = '2015-08-'+str(start)+'T00:00:00Z'
 end_date = '2015-08-'+str(start+1)+'T00:00:00Z'
 # future : automated do by current timestamp + 10 days after date crawl
@@ -127,20 +127,20 @@ for page_num in xrange(1,7):
 						if len(P) > 0 :
 							#print P[0]
 
-							fields 	= ('id', 'title', 'start_timestamp', 'end_timestamp', 'description', 'organizer', 'event_category', 'address', 'city', 'country', 'postal_code', 'coordinates', 'image_thumbnail_url', 'info_url')
-							D = {}
-							ser = EventSerializer(P[0]).data
+							# fields 	= ('id', 'title', 'start_timestamp', 'end_timestamp', 'description', 'organizer', 'event_category', 'address', 'city', 'country', 'postal_code', 'coordinates', 'image_thumbnail_url', 'info_url')
+							# D = {}
+							# ser = EventSerializer(P[0]).data
 
-							for x in fields:
-								if x in ser  and ser[x]!=None:
-									D[x]=ser[x]
+							# for x in fields:
+							# 	if x in ser  and ser[x]!=None:
+							# 		D[x]=ser[x]
 							
-							D['django_id'] = D['id']
-							D['django_ct'] = 'Events.dummy'
+							# # D['django_id'] = D['id']
+							# # D['django_ct'] = 'Events.dummy'
 							
-							json_data = JSONRenderer().render([D])
+							# json_data = JSONRenderer().render([D])
 
-							# json_data = JSONRenderer().render(EventSerializer([P[0]], many=True).data) # E.data
+							json_data = JSONRenderer().render(EventSerializer([P[0]], many=True).data) # E.data
 							# print json_data, type(json_data)
 
 							post_url_header = {
@@ -148,7 +148,7 @@ for page_num in xrange(1,7):
 							}
 
 							r = requests.post(
-								"http://172.16.65.217:8983/solr/eventful/update",
+								"http://172.16.65.217:8983/solr/eventsearch/update",
 								headers = post_url_header,
 								data = json_data,
 								)

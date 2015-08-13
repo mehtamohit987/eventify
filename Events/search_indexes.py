@@ -17,8 +17,14 @@ class EventIndex(indexes.SearchIndex, indexes.Indexable):
 	postal_code 		= indexes.CharField()
 	coordinates 		= indexes.CharField()
 
+	django_id			= indexes.IntegerField()
+	django_ct			= indexes.CharField()
+
 	def get_model(self):
 		return Dummy
+ 	# def index_queryset(self, using=None):
+  #       "Used when the entire index for model is updated."
+  #       return self.get_model().objects.filter(pub_date__lte=datetime.datetime.now())
 
 	# def index_queryset(self, using=None):
 	# 	"""Used when the entire index for model is updated."""

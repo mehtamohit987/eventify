@@ -13,25 +13,25 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url , patterns
+from django.conf.urls import include, url # , patterns
 from django.contrib import admin
 from rest_framework import routers
-from Events.views import EventSearch
+# from Events.views import EventSearch
 from rest_framework import routers
 
-router = routers.DefaultRouter()
-router.register("search", EventSearch, base_name="event-search")
+# router = routers.DefaultRouter()
+# router.register("search", EventSearch, base_name="event-search")
 
 
-urlpatterns = patterns(
-    "",
-    url(r"api/events/", include(router.urls)),
-)
+# urlpatterns = patterns(
+#     "",
+#     url(r"api/events/", include(router.urls)),
+# )
 
 
-# urlpatterns = [
-#     #url(r'^api/admin/', include(admin.site.urls)),
-#     url(r'^api/events/', include(router.urls)),
-#     # url(r'^api/events/', include('Events.urls')),
-#     url(r'^api/user/', include('User.urls')),
-#     ]
+urlpatterns = [
+    # url(r'^api/admin/', include(admin.site.urls)),
+    # # url(r'^api/events/', include(router.urls)),
+    url(r'^api/events/', include('Events.urls')),
+    url(r'^api/user/', include('User.urls')),
+    ]
