@@ -15,7 +15,6 @@ import os
 import djcelery
 from mongoengine import connect
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -44,6 +43,8 @@ INSTALLED_APPS = (
     'rest_framework_mongoengine',
     'djcelery',
     'kombu.transport.django',
+    'haystack',
+    'drf_haystack',
     'Events',
     'User',
 )
@@ -114,4 +115,14 @@ djcelery.setup_loader()
 BROKER_URL = 'django://'
 
 
-connect('eventify', host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
+connect('eventify')#, host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'package_override.solr_backend_override.CustomSolrEngine', # 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://172.16.65.217:8983/solr/event'
+        # ...or for multicore...
+        # 'URL': 'http://127.0.0.1:8983/solr/mysite',
+    },
+}

@@ -8,7 +8,7 @@ from rest_framework.renderers import JSONRenderer
 # connect('eventify', host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
 
 
-start = 22
+start = 24
 start_date = '2015-08-'+str(start)+'T00:00:00Z'
 end_date = '2015-08-'+str(start+1)+'T00:00:00Z'
 # future : automated do by current timestamp + 10 days after date crawl
@@ -85,9 +85,9 @@ for page_num in xrange(1,7):
 
 					if 'address' in loc_res and loc_res['address']!=None:
 						if 'address_1' in loc_res['address'] and loc_res['address']['address_1'] != None:
-							A = loc_res['address']['address_1'] if A == None else A + loc_res['address']['address_1'] 
+							A = loc_res['address']['address_1'] if A == None else A + ',' + loc_res['address']['address_1'] 
 						if 'address_2' in loc_res['address'] and loc_res['address']['address_2'] != None:
-							A = loc_res['address']['address_2'] if A == None else A + loc_res['address']['address_2'] 
+							A = loc_res['address']['address_2'] if A == None else A + ',' + loc_res['address']['address_2'] 
 
 									
 
@@ -95,24 +95,24 @@ for page_num in xrange(1,7):
 
 
 					E = Event (
-								title = i['name']['text'],
+								title 			= i['name']['text'],
 								start_timestamp = datetime.strptime(i['start']['utc'], "%Y-%m-%dT%H:%M:%SZ"),
-								end_timestamp = datetime.strptime(i['end']['utc'], "%Y-%m-%dT%H:%M:%SZ"),
-								description = i['description']['text'] if ('description' in i and i['description']!=None) else None,
+								end_timestamp 	= datetime.strptime(i['end']['utc'], "%Y-%m-%dT%H:%M:%SZ"),
+								description 	= i['description']['text'] if ('description' in i and i['description']!=None) else None,
 
-								organizer = O,
-								event_category = C,
+								organizer 		= O,
+								event_category 	= C,
 
-								address = A,
-								city = loc_res['address']['city'] if 'address' in loc_res and loc_res['address']!=None and 'city' in loc_res['address'] else None,
-								country = loc_res['address']['country']  if 'address' in loc_res and loc_res['address']!=None and 'country' in loc_res['address'] else None,
-								coordinates = ( loc_res['latitude'] + ", " + loc_res['longitude'] )  if ('latitude' in loc_res and 'longitude' in loc_res) else None,
-								postal_code = loc_res['address']['postal_code'] if 'address' in loc_res and loc_res['address']!=None and 'postal_code' in loc_res['address'] else None,
+								address 		= A,
+								city 			= loc_res['address']['city'] if 'address' in loc_res and loc_res['address']!=None and 'city' in loc_res['address'] else None,
+								country 		= loc_res['address']['country']  if 'address' in loc_res and loc_res['address']!=None and 'country' in loc_res['address'] else None,
+								coordinates 	= ( loc_res['latitude'] + ", " + loc_res['longitude'] )  if ('latitude' in loc_res and 'longitude' in loc_res and loc_res['latitude']!=None and loc_res['latitude']!=None) else None,
+								postal_code 	= loc_res['address']['postal_code'] if 'address' in loc_res and loc_res['address']!=None and 'postal_code' in loc_res['address'] else None,
 								
-								source = 'eventbrite',
-								source_server_id = i['id'] if 'id' in i else None,
+								source 				= 'eventbrite',
+								source_server_id 	= i['id'] if 'id' in i else None,
 								image_thumbnail_url = i['logo']['url'] if ('logo' in i and i['logo']!=None) else None,
-								info_url = i['url'] if 'url' in i else None
+								info_url 			= i['url'] if 'url' in i else None
 							)
 
 					Q = Event.objects(title=E.title, start_timestamp=E.start_timestamp, coordinates=E.coordinates)
@@ -126,7 +126,21 @@ for page_num in xrange(1,7):
 						print P
 						if len(P) > 0 :
 							#print P[0]
-							json_data = JSONRenderer().render(EventSerializer([P[0]], many=True).data) # E.data
+
+							fields 	= ('id', 'title', 'start_timestamp', 'end_timestamp', 'description', 'organizer', 'event_category', 'address', 'city', 'country', 'postal_code', 'coordinates', 'image_thumbnail_url', 'info_url')
+							D = {}
+							ser = EventSerializer(P[0]).data
+
+							for x in fields:
+								if x in ser  and ser[x]!=None:
+									D[x]=ser[x]
+							
+							D['django_id'] = D['id']
+							D['django_ct'] = 'Events.dummy'
+							
+							json_data = JSONRenderer().render([D])
+
+							# json_data = JSONRenderer().render(EventSerializer([P[0]], many=True).data) # E.data
 							# print json_data, type(json_data)
 
 							post_url_header = {
@@ -134,7 +148,7 @@ for page_num in xrange(1,7):
 							}
 
 							r = requests.post(
-								"http://172.16.65.217:8983/solr/event/update",
+								"http://172.16.65.217:8983/solr/eventful/update",
 								headers = post_url_header,
 								data = json_data,
 								)
