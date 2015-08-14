@@ -11,10 +11,12 @@ from rest_framework.response import Response
 
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
+from datetime import datetime
+from haystack.utils.geo import Point, D as Distance
 # from drf_haystack.viewsets import HaystackViewSet
 
 
-class EventList(generics.ListAPIView):
+class EventList(generics.ListAPIView): # CreateDestroy
 	# queryset = SearchQuerySet().all()
 	serializer_class = EventSearchSerializer
 	paginate_by = 10
@@ -24,43 +26,70 @@ class EventList(generics.ListAPIView):
 		# print self.request
 		D = self.request.GET
 		K = self.request.GET.viewkeys()
-		print dir(K)
 
 		q = D.get('q','')
 
 		results = SearchQuerySet().filter(content=AutoQuery(q))
 
-		
+		if 'time_start' in K and 'time_end' in K:
+			results = results.filter( start_timestamp__range=( datetime.strptime(D.get('time_start'), "%Y-%m-%dT%H:%M:%S"), datetime.strptime(D.get('time_end'), "%Y-%m-%dT%H:%M:%S") ) )
+				
 		if 'city' in K:
 			results = results.narrow('city:'+ str(D.get('city'))) # (city= Exact(D.get('city')))
 		if 'country' in K:
 		 	results = results.narrow('country:'+str(D.get('country'))) # (country = Exact(D.get('country')))
+
+		if 'latitude' in K and 'longitude' in K:
+		  	latitude = float(D.get('latitude'))
+		  	longitude = float(D.get('longitude'))
+		  	P = Point(longitude, latitude)# (latitude, longitude)
+		  	results = results.dwithin('coordinates', P, Distance(mi=250))
+
+		return results
+
+
 		
-
-		# if 'coordinates' in K:
-		#  	results = results.narrow('coordinates:' + str(D.get('coordinates')))
-		
-
-
-		# # if x == '':
-		# 	results = results.filter()
-		# if x == '':
-		# 	results = results.filter()
-		# if x == '':
-		# 	results = results.filter()
-
 		
 		# start_offset = int(self.request.GET.get('page',1))-1
 		# end_offset = self.paginate_by+start_offset
 		# results = results[start_offset:end_offset]
 
-		return results
 
+
+
+	""""
+	def post(self, request):
+		add it to db 
+		and http post to solr
+
+	"""
 
 class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	queryset = Event.objects
 	# lookup_field = 'id'
 	serializer_class = EventSerializer
+
+
+	"""
+
+	custom put and delete
+
+	put
+		update request
+		handele to db by serializer
+		post UPDATE too osolr
+
+		
+
+
+	delete
+
+		from here and from index
+
+
+	"""
+
+
 
 # class customManager(models.Manager):
 # 	def get_queryset(self):
@@ -69,6 +98,12 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 # class EventSearch(ListAPIView):
 # 	objects= customManager
 			
+
+
+
+
+
+
 
 
 # class EventSearch(HaystackViewSet):

@@ -13,9 +13,9 @@ class Event(Document):
 	
 
 	address			 	= StringField(max_length=512, default='')
-	city		 		= StringField(max_length=25, default='')
+	city		 		= StringField(max_length=100, default='')
 	country			 	= StringField(max_length=16, default='')
-	postal_code 		= StringField(max_length=15, default='')
+	postal_code 		= StringField(max_length=50, default='')
 	coordinates 		= StringField(default='')
 		
 

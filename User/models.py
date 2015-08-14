@@ -14,5 +14,13 @@ class User(Document):
 	postal_code 		= StringField(max_length=15)
 	coordinates 		= StringField()
 		
-
 	favourites 		= ListField(ReferenceField(Event))
+
+
+"""
+
+class UserFavourite(Document):
+	user = ReferenceField(User)
+	favourites = ListField(ReferenceField(Event))
+
+"""
