@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html lang="en" style="width:1200px;">
+<!-- chromium-browser --disable-web-security -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>EVENTIFY</title>
+    <link rel="stylesheet" href="{% static 'WebApp/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'WebApp/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'WebApp/bootstrap/css/theme.css' %}">
+
+
+
+
+
+
+    <style>
+    body {
+        padding-top: 70px;
+         /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    </style>
+</head>
+
+{% verbatim %}
+<body  ng-app="eventify" ng-controller="mainController">
+  
+
+       <!-- Navbar -->
+       <div class="row">
+           <div class="col-lg-12">
+               <div class="navbar navbar-inverse navbar-fixed-top" >
+                   <div class="navbar-header">
+                       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+                           <span class="icon-bar"></span>
+                           <span class="icon-bar"></span>
+                           <span class="icon-bar"></span>
+                       </button>
+                       <a class="navbar-brand" href="index.html">Eventify</a>
+                   </div>
+                   <div class="navbar-collapse collapse navbar-inverse-collapse">
+                       <!-- <ul class="nav navbar-nav">
+                           <li class="active"><a href="index.html">Events</a></li>
+                           <li><a href="#">Movies</a></li>
+                       </ul> -->
+
+                       <div class=" main-frame pull-left" >
+                       
+                           <div style="padding-top: 10px; padding-left:30px; padding-right:30px;" class="search-box row-fluid form-inline input-append">
+                               <input class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" placeholder="Event Search" ng-change="queryChanged()"> 
+
+
+                               
+                               <select ng-model="selected_country" class="form-control" style="width:180px;">
+                                   <option value="">-Select Country-</option>
+                                   <option  ng-repeat="country in country_keys" value="{{country}}">{{ countries[country] }}</option>
+                               </select>
+
+                               <select ng-model="selected_time_range" class=" form-control">
+                                   <option value="">-Select Time Range-</option>
+                                   <option value="0">Today</option>
+                                   <option value="1">This Week</option>
+                                   <option value="2">This Month</option>
+                               </select>
+                               
+
+                               <button type="Submit" class="btn btn-default glyphicon glyphicon-map-marker form-control" ng-click="location_button()"></button>
+
+                               <button type="Submit" class="btn btn-default form-control" ng-click="search_button()" ng-disabled="disableSearch">Submit</button>
+                               
+                           </div>
+
+                        </div>
+
+
+
+                      <ul class="nav navbar-nav pull-right ">
+
+
+                      <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Login </a></li>
+                       <li ng-if="loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Favourites </a></li>
+                       <li ng-if="loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> My Profile </a></li>
+                      </ul>
+                   </div>
+               </div>
+           </div>
+       
+
+       </div>
+
+
+
+
+
+
+
+      <div class="container">
+
+      <div class="event" ng-repeat="event in events">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="page-header">
+                      <h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6>
+                      <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
+                      <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
+                  </div>
+              </div>
+          </div>
+
+
+          <!-- Headings -->
+          <div class="row">
+              <div class="col-lg-2">
+ 
+                <div ng-if="event.image_thumbnail_url">
+                 <img ng-src={{event.image_thumbnail_url}} height="120" width="120">
+                </div>
+                <div ng-if="!event.image_thumbnail_url">
+                  {% endverbatim %}
+                  <img src="{% static 'WebApp/img/dummy.png' %}" height="120" width="120">
+                  {% verbatim %}
+                </div>
+                  <!-- <p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p> -->
+              </div>
+              <div class="col-lg-10 jumbotron">
+
+
+                  <p style="font-size:12px;">{{event.description | limitTo: 500}} 
+                  <a ng-href={{event.info_url}}>...(continue reading)...<a>
+                  </p>
+                  <p style="font-size:12px;">Address: {{event.address | limitTo: 50}}</p>
+                  
+              </div>
+              
+          </div>
+      </div>
+      </div>
+
+    <div class="jumbotron" ng-if="searching" style="margin-left:20px;">
+    <ul class="pager">
+    <li class="previous" ng-click="prevPage()" ng-disabled="prevExists">
+    <a>Previous</a>
+    </li>
+    <li class="next" ng-click="nextPage()" ng-disabled="nextExists">
+    <a>Next</a>
+    </li>
+    </ul>
+    </div>
+
+
+    {% endverbatim %}
+
+
+    <script src="{% static 'WebApp/scripts/jquery-1.10.2.min.js' %}"></script>
+    <script src="{% static 'WebApp/scripts/angular.min.js' %}"></script>
+    <script src="{% static 'WebApp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--script src="bootstrap/js/bootstrap.js' %}"></script-->
+    <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/mainController.js' %}"></script>
+
+</body>
+
+
+
+<!-- -Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content login-modal">
+            <div class="modal-header login-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="loginModalLabel">USER AUTHENTICATION</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div role="tabpanel" class="login-tab">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a id="signin-taba" href="#home" aria-controls="home" role="tab" data-toggle="tab">Sign In</a></li>
+                            <li role="presentation"><a id="signup-taba" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a></li>
+                            <li role="presentation"><a id="forgetpass-taba" href="#forget_password" aria-controls="forget_password" role="tab" data-toggle="tab">Forget Password</a></li>
+                        </ul>
+                    
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active text-center" id="home">
+                                &nbsp;&nbsp;
+                                <span id="login_fail" class="response_error" style="display: none;">Loggin failed, please try again.</span>
+                                <div class="clearfix"></div>
+                                <form>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                            <input type="text" class="form-control" id="login_username" placeholder="Username">
+                                        </div>
+                                        <span class="help-block has-error" id="email-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                            <input type="password" class="form-control" id="password" placeholder="Password">
+                                        </div>
+                                        <span class="help-block has-error" id="password-error"></span>
+                                    </div>
+                                    <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In....">Login</button>
+                                    <div class="clearfix"></div>
+                                    <div class="login-modal-footer">
+                                        <div class="row">
+                                            <div class="col-xs-8 col-sm-8 col-md-8">
+                                                <i class="fa fa-lock"></i>
+                                                <a href="javascript:;" class="forgetpass-tab"> Forgot password? </a>
+                                            
+                                            </div>
+                                            
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <i class="fa fa-check"></i>
+                                                <a href="javascript:;" class="signup-tab"> Sign Up </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="profile">
+                                &nbsp;&nbsp;
+                                <span id="registration_fail" class="response_error" style="display: none;">Registration failed, please try again.</span>
+                                <div class="clearfix"></div>
+                                <form>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                            <input type="text" class="form-control" id="username" placeholder="Username">
+                                        </div>
+                                        <span class="help-block has-error" data-error='0' id="username-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-at"></i></div>
+                                            <input type="text" class="form-control" id="remail" placeholder="Email">
+                                        </div>
+                                        <span class="help-block has-error" data-error='0' id="remail-error"></span>
+                                    </div>
+                                    <button type="button" id="register_btn" class="btn btn-block bt-login" data-loading-text="Registering....">Register</button>
+                                    <div class="clearfix"></div>
+                                    <div class="login-modal-footer">
+                                        <div class="row">
+                                            <div class="col-xs-8 col-sm-8 col-md-8">
+                                                <i class="fa fa-lock"></i>
+                                                <a href="javascript:;" class="forgetpass-tab"> Forgot password? </a>
+                                            
+                                            </div>
+                                            
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <i class="fa fa-check"></i>
+                                                <a href="javascript:;" class="signin-tab"> Sign In </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div role="tabpanel" class="tab-pane text-center" id="forget_password">
+                                &nbsp;&nbsp;
+                                <span id="reset_fail" class="response_error" style="display: none;"></span>
+                                    <div class="clearfix"></div>
+                                    <form>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                                <input type="text" class="form-control" id="femail" placeholder="Email">
+                                            </div>
+                                            <span class="help-block has-error" data-error='0' id="femail-error"></span>
+                                        </div>
+                                        
+                                        <button type="button" id="reset_btn" class="btn btn-block bt-login" data-loading-text="Please wait....">Forget Password</button>
+                                        <div class="clearfix"></div>
+                                        <div class="login-modal-footer">
+                                            <div class="row">
+                                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                                    <i class="fa fa-lock"></i>
+                                                    <a href="javascript:;" class="signin-tab"> Sign In </a>
+                                                
+                                                </div>
+                                                
+                                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                                    <i class="fa fa-check"></i>
+                                                    <a href="javascript:;" class="signup-tab"> Sign Up </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+       </div>
+    </div>
+
+    <!-- - Login Model Ends Here -->
+
+
+
+
+
+
+
+</html>

@@ -4,6 +4,8 @@ from Events.serializers import EventSerializer
 from rest_framework.renderers import JSONRenderer
 from datetime import datetime
 import requests
+from django.conf import settings
+
 api = eventful.API('ZjNBk59GdHJnsGd6')
 count = 0
 count_saved = 0
@@ -96,7 +98,7 @@ for month in months:
 							}
 							# print json_data
 							r = requests.post(
-								"http://172.16.65.217:8983/solr/eventsearch/update",
+								settings.HAYSTACK_CONNECTIONS['default']['URL'] + "/update",
 								headers = post_url_header,
 								data = json_data,
 								)

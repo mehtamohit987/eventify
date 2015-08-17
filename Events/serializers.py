@@ -42,6 +42,7 @@ class EventSerializer(CustomDocumentSerializer):
 #         # ]
 
 class EventSearchSerializer(serializers.Serializer):
+	id 					= serializers.CharField()
 	title				= serializers.CharField()	
 	start_timestamp 	= serializers.DateTimeField()
 	end_timestamp 		= serializers.DateTimeField()
@@ -55,3 +56,7 @@ class EventSearchSerializer(serializers.Serializer):
 	country			 	= serializers.CharField()
 	postal_code 		= serializers.CharField()
 	coordinates 		= serializers.CharField()
+
+	image_thumbnail_url = serializers.CharField()
+	info_url 			= serializers.CharField()
+	

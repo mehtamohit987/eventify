@@ -54,7 +54,8 @@ class EventList(generics.ListAPIView): # CreateDestroy
 		# end_offset = self.paginate_by+start_offset
 		# results = results[start_offset:end_offset]
 
-
+		# def post(self, request, *args, **kwargs):
+  #       	return self.create(request, *args, **kwargs)
 
 
 	""""

@@ -17,12 +17,12 @@ class EventIndex(indexes.SearchIndex, indexes.Indexable):
 	postal_code 		= indexes.CharField()
 	coordinates 		= indexes.CharField() #LocationField
 
-	# image_thumbnail_url = URLField()
-	# info_url 			= URLField()
+	image_thumbnail_url = indexes.CharField()
+	info_url 			= indexes.CharField()
 	
 	django_id			= indexes.IntegerField()
 	django_ct			= indexes.CharField()
-
+	id 					= indexes.CharField()
 
 	def get_model(self):
 		return Dummy

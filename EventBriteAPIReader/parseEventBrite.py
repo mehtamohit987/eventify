@@ -4,11 +4,12 @@ from Events.serializers import EventSerializer
 from mongoengine import *
 from datetime import datetime
 from rest_framework.renderers import JSONRenderer
+from django.conf import settings
 
 # connect('eventify', host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
 
 
-start = 16
+start = 18
 start_date = '2015-08-'+str(start)+'T00:00:00Z'
 end_date = '2015-08-'+str(start+1)+'T00:00:00Z'
 # future : automated do by current timestamp + 10 days after date crawl
@@ -148,7 +149,7 @@ for page_num in xrange(1,7):
 							}
 
 							r = requests.post(
-								"http://172.16.65.217:8983/solr/eventsearch/update",
+								settings.HAYSTACK_CONNECTIONS['default']['URL'] + "/update",
 								headers = post_url_header,
 								data = json_data,
 								)

@@ -44,9 +44,9 @@ INSTALLED_APPS = (
     'djcelery',
     'kombu.transport.django',
     'haystack',
-    # 'drf_haystack',
     'Events',
     'User',
+    'WebApp',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -118,10 +118,15 @@ BROKER_URL = 'django://'
 connect('eventify')#, host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
 
 
+haystack_indra_url_firefly = ['172.16.65.217', '172.16.70.191','localhost']
+haystack_indra_core_firefly = 'eventsearch'
+haystack_indra_firefly_i = 2
+
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'package_override.solr_backend_override.CustomSolrEngine', # 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://172.16.65.217:8983/solr/eventsearch'
+        'URL': 'http://' + haystack_indra_url_firefly[haystack_indra_firefly_i] + ':8983' +'/solr/'+ haystack_indra_core_firefly
         # ...or for multicore...
         # 'URL': 'http://127.0.0.1:8983/solr/mysite',
     },

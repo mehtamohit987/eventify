@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url # , patterns
 from django.contrib import admin
 from rest_framework import routers
-# from Events.views import EventSearch
+from WebApp.views import index
 from rest_framework import routers
 
 # router = routers.DefaultRouter()
@@ -30,8 +30,8 @@ from rest_framework import routers
 
 
 urlpatterns = [
-    # url(r'^api/admin/', include(admin.site.urls)),
-    # # url(r'^api/events/', include(router.urls)),
+    url(r'^api/admin/', include(admin.site.urls)),
     url(r'^api/events/', include('Events.urls')),
     url(r'^api/user/', include('User.urls')),
+    url(r'^$', include('WebApp.urls')),
     ]
