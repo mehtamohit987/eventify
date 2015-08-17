@@ -24,7 +24,7 @@ eventify.controller('mainController', ['$scope', '$http', function ($scope, $htt
     $scope.nextExists = null
     $scope.currentPage = 0;
 
-    $scope.loggedIn = true
+    $scope.loggedIn = false
 
 
 

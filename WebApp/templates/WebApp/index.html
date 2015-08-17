@@ -41,14 +41,10 @@
                            <span class="icon-bar"></span>
                            <span class="icon-bar"></span>
                        </button>
-                       <a class="navbar-brand" href="index.html">Eventify</a>
+                       <a class="navbar-brand" href=".">Eventify</a>
                    </div>
                    <div class="navbar-collapse collapse navbar-inverse-collapse">
-                       <!-- <ul class="nav navbar-nav">
-                           <li class="active"><a href="index.html">Events</a></li>
-                           <li><a href="#">Movies</a></li>
-                       </ul> -->
-
+                       
                        <div class=" main-frame pull-left" >
                        
                            <div style="padding-top: 10px; padding-left:30px; padding-right:30px;" class="search-box row-fluid form-inline input-append">
@@ -79,13 +75,26 @@
 
 
 
-                      <ul class="nav navbar-nav pull-right ">
+                      <ul class="nav navbar-nav" style="margin-left:60px;">
 
 
                       <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Login </a></li>
-                       <li ng-if="loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Favourites </a></li>
-                       <li ng-if="loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> My Profile </a></li>
+                       
+                       <li ng-if="loggedIn">
+                       <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Me <b class="caret"></b></a>
+                       <ul class="dropdown-menu">
+                            <li>
+                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> View Profile </a>
+                            </li>
+                            <li>
+                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Logout </a>
+                            </li>
+                            <li>
+                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Favourites </a>
+                            </li>
                       </ul>
+                      </li>
+
                    </div>
                </div>
            </div>
@@ -207,7 +216,7 @@
                                     </div>
                                     <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In....">Login</button>
                                     <div class="clearfix"></div>
-                                    <div class="login-modal-footer">
+                                    <!-- <div class="login-modal-footer">
                                         <div class="row">
                                             <div class="col-xs-8 col-sm-8 col-md-8">
                                                 <i class="fa fa-lock"></i>
@@ -220,7 +229,7 @@
                                                 <a href="javascript:;" class="signup-tab"> Sign Up </a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </form>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="profile">
@@ -244,7 +253,7 @@
                                     </div>
                                     <button type="button" id="register_btn" class="btn btn-block bt-login" data-loading-text="Registering....">Register</button>
                                     <div class="clearfix"></div>
-                                    <div class="login-modal-footer">
+                                    <!-- <div class="login-modal-footer">
                                         <div class="row">
                                             <div class="col-xs-8 col-sm-8 col-md-8">
                                                 <i class="fa fa-lock"></i>
@@ -257,7 +266,7 @@
                                                 <a href="javascript:;" class="signin-tab"> Sign In </a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </form>
                             </div>
                             <div role="tabpanel" class="tab-pane text-center" id="forget_password">
@@ -275,7 +284,7 @@
                                         
                                         <button type="button" id="reset_btn" class="btn btn-block bt-login" data-loading-text="Please wait....">Forget Password</button>
                                         <div class="clearfix"></div>
-                                        <div class="login-modal-footer">
+                                        <!-- <div class="login-modal-footer">
                                             <div class="row">
                                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                                     <i class="fa fa-lock"></i>
@@ -288,7 +297,7 @@
                                                     <a href="javascript:;" class="signup-tab"> Sign Up </a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </form>
                                 </div>
                             </div>
