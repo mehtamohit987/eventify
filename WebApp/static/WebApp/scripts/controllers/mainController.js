@@ -111,6 +111,7 @@ eventify.controller('mainController', ['$scope', '$http', function ($scope, $htt
         renderContent(-1);
 
         $scope.currentPage --;
+        console.log('prev_page')
     };
 
 
@@ -120,7 +121,7 @@ eventify.controller('mainController', ['$scope', '$http', function ($scope, $htt
         renderDate();
         renderContent(1)
         $scope.currentPage ++;
-
+        console.log('next_page')
     };
 
 

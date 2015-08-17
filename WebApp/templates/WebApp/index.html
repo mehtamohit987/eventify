@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>EVENTIFY</title>
+    <title>Eventify</title>
     <link rel="stylesheet" href="{% static 'WebApp/bootstrap/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'WebApp/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'WebApp/bootstrap/css/theme.css' %}">
@@ -98,17 +98,13 @@
                    </div>
                </div>
            </div>
-       
-
        </div>
 
+       <div style="margin-left:20px;">
 
-
-
-
-
-
-      <div class="container">
+      <span ng-if="searching" style="align:center;">
+          Number of Results found:  {{ numFound }}
+      </span>
 
       <div class="event" ng-repeat="event in events">
           <div class="row">
@@ -147,20 +143,20 @@
               </div>
               
           </div>
-      </div>
-      </div>
+        </div>
 
-    <div class="jumbotron" ng-if="searching" style="margin-left:20px;">
+    <div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
     <ul class="pager">
-    <li class="previous" ng-click="prevPage()" ng-disabled="prevExists">
+    <li class="previous" ng-click="prevPage()" ng-if="prevExists">
     <a>Previous</a>
     </li>
-    <li class="next" ng-click="nextPage()" ng-disabled="nextExists">
+    <li class="next" ng-click="nextPage()" ng-if="nextExists">
     <a>Next</a>
     </li>
     </ul>
     </div>
 
+    </div>
 
     {% endverbatim %}
 
@@ -181,7 +177,7 @@
         <div class="modal-content login-modal">
             <div class="modal-header login-modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title text-center" id="loginModalLabel">USER AUTHENTICATION</h4>
+                <h4 class="modal-title text-center" id="loginModalLabel">User Authentication</h4>
             </div>
             <div class="modal-body">
                 <div class="text-center">
@@ -216,20 +212,6 @@
                                     </div>
                                     <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In....">Login</button>
                                     <div class="clearfix"></div>
-                                    <!-- <div class="login-modal-footer">
-                                        <div class="row">
-                                            <div class="col-xs-8 col-sm-8 col-md-8">
-                                                <i class="fa fa-lock"></i>
-                                                <a href="javascript:;" class="forgetpass-tab"> Forgot password? </a>
-                                            
-                                            </div>
-                                            
-                                            <div class="col-xs-4 col-sm-4 col-md-4">
-                                                <i class="fa fa-check"></i>
-                                                <a href="javascript:;" class="signup-tab"> Sign Up </a>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </form>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="profile">
@@ -253,20 +235,6 @@
                                     </div>
                                     <button type="button" id="register_btn" class="btn btn-block bt-login" data-loading-text="Registering....">Register</button>
                                     <div class="clearfix"></div>
-                                    <!-- <div class="login-modal-footer">
-                                        <div class="row">
-                                            <div class="col-xs-8 col-sm-8 col-md-8">
-                                                <i class="fa fa-lock"></i>
-                                                <a href="javascript:;" class="forgetpass-tab"> Forgot password? </a>
-                                            
-                                            </div>
-                                            
-                                            <div class="col-xs-4 col-sm-4 col-md-4">
-                                                <i class="fa fa-check"></i>
-                                                <a href="javascript:;" class="signin-tab"> Sign In </a>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </form>
                             </div>
                             <div role="tabpanel" class="tab-pane text-center" id="forget_password">
@@ -283,21 +251,7 @@
                                         </div>
                                         
                                         <button type="button" id="reset_btn" class="btn btn-block bt-login" data-loading-text="Please wait....">Forget Password</button>
-                                        <div class="clearfix"></div>
-                                        <!-- <div class="login-modal-footer">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 col-md-6">
-                                                    <i class="fa fa-lock"></i>
-                                                    <a href="javascript:;" class="signin-tab"> Sign In </a>
-                                                
-                                                </div>
-                                                
-                                                <div class="col-xs-6 col-sm-6 col-md-6">
-                                                    <i class="fa fa-check"></i>
-                                                    <a href="javascript:;" class="signup-tab"> Sign Up </a>
-                                                </div>
-                                            </div>
-                                        </div> -->
+                                        <div class="clearfix"></div>                                        
                                     </form>
                                 </div>
                             </div>
@@ -309,12 +263,6 @@
             </div>
        </div>
     </div>
-
-    <!-- - Login Model Ends Here -->
-
-
-
-
 
 
 
