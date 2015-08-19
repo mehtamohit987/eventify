@@ -23,9 +23,7 @@ class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 class UserList(drfme_generics.ListCreateAPIView):
 	queryset=User.objects.all()
 	#permission_classes=IsAuthenticated
-	# model=UserInfo
 	serializer_class=UserSerializer
-	# authentication_classes = [MongoAuthentication,]
 
 class ObtainAuthToken(APIView):
 	serializer_class=UserSerializer
@@ -69,7 +67,14 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 		else:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
-	
+
+class FavouriteDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
+	queryset = UserFavourite.objects.all()
+	serializer_class = UserFavouriteSerializer
+	lookup_field = 'id'
+	authentication_classes = [MongoAuthentication,]
+
+
 	# def get_object():
 	# 	pass
 	
@@ -117,12 +122,6 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 	# 				return self.create(request, *args, user=user_reference, **kwargs)
 	# 	return Http404
 	
-
-class FavouriteDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
-	queryset = UserFavourite.objects.all()
-	serializer_class = UserFavouriteSerializer
-	lookup_field = 'id'
-	authentication_classes = [MongoAuthentication,]
 
 	# def get_object(self):
 	# 	queryset = self.get_queryset()
