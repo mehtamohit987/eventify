@@ -2,8 +2,10 @@ var eventify = angular.module("eventify",[]);
 
 eventify.controller('mainController', ['$scope', '$http', function ($scope, $http) {
 
+    //'$location', 'validate', 'djangoAuth'
+    // $location, validate, djangoAuth
 
-    var host = 'localhost';//'172.16.65.209'; // 
+    var host =  'localhost';//'172.16.65.209'; //
     var port = '8000';
 
     var date = [];
@@ -25,7 +27,17 @@ eventify.controller('mainController', ['$scope', '$http', function ($scope, $htt
     $scope.currentPage = 0;
 
     $scope.loggedIn = false
+    $scope.authToken = null
+    $scope.registered = false
+    $scope.user_id = null
 
+
+
+    if ($scope.authToken == null && typeof(Storage) != "undefined") {
+        localStorage.setItem("authToken", $scope.authToken);
+        $scope.authToken = localStorage.getItem("authToken");
+        $scope.loggedIn = true;
+    }
 
 
 
@@ -64,8 +76,7 @@ eventify.controller('mainController', ['$scope', '$http', function ($scope, $htt
        
         if(x!=null&&x!=''&&x!=' ')
         {       
-            //time_start=2015-09-01T00:00:00&time_end=2015-12-01T00:00:00
-            
+
             y = (($scope.selected_time_range==null||$scope.selected_time_range=="") ? '': '&time_start=' + date[$scope.selected_time_range]['time_start'] + '&time_end=' + date[$scope.selected_time_range]['time_end'])
 
             z = (($scope.selected_country==null||$scope.selected_country=="") ? '': '&country=' + $scope.selected_country)
@@ -146,6 +157,134 @@ eventify.controller('mainController', ['$scope', '$http', function ($scope, $htt
         renderDate()
         renderContent(0)        
     };
+
+
+
+    //user
+    $scope.lmodel = {'email':'','password':''};
+    $scope.rmodel = {'fname':'','lname':'', 'email':'', 'password':''};
+    $scope.fmodel = {'email':''}
+    
+
+
+
+
+
+
+    $scope.logout = function(){
+        $scope.loggedIn = false;
+    }
+
+    //login
+    $scope.login_button = function(){
+        //$http.post(...)
+        x = $scope.lmodel.email
+        y = $scope.lmodel.password
+
+
+        if(x!=null&&x!=''&&x!=' '&& y!=null&&y!=''&&y!=' ')
+        {       
+            
+
+            var url = "http://" + host + ":" + port +"/api/user/auth-token/?email=" + String(x) + "&password=" + String(y)
+
+            $http.get(url)
+                .success(function(data){
+                    if('token' in data && data['token']!= null){
+                        $scope.loggedIn=true;
+                        $scope.authToken= String(data['token']);
+
+
+                        if (typeof(Storage) != "undefined") {
+                            localStorage.setItem("authToken", $scope.authToken);
+                        }
+
+                        $(function () {
+                            console.log('sai')
+                            $('.close').trigger("click");
+                          });
+
+                    }
+                    else{
+                        console.log("error");
+                        $scope.loggedIn=false;
+                        $scope.authToken = null;
+                    }
+                                
+            })  
+            .error(function(data){
+                $scope.loggedIn=false;
+                $scope.authToken = null;
+
+                
+
+            });
+        }
+
+
+
+    };
+
+//register
+
+    $scope.register_button = function(){
+
+        x = $scope.rmodel.email
+        y = $scope.rmodel.password
+        
+
+
+        if(x!=null&&x!=''&&x!=' '&& y!=null&&y!=''&&y!=' ')
+        {       
+            
+
+            var url = "http://" + host + ":" + port +"/api/user/"
+            data = $scope.rmodel
+            $http.post(url, $scope.rmodel)
+                .success(function(data, status){
+                    console.log('ghusa');                    
+                    if('id' in data && data['id']!= null){
+                        $scope.registered=true;
+                        //alert('Registered Successfully');
+                        $scope.id= String(data['id']);
+
+
+                        if (typeof(Storage) != "undefined") {
+                            localStorage.setItem("id", $scope.id);
+                        }
+
+                        $(function () {
+                            console.log('ho gya')
+                            $('.close').trigger("click");
+                          });
+
+                    }
+                    else{
+                        console.log("reg error");
+                        $scope.registered=false;
+                        $scope.id = null;
+                    }
+                                   
+            })  
+            .error(function(data){
+                $scope.registered=false;
+                $scope.id = null;
+            });
+        }
+    };
+
+//forgot user
+    $scope.forgot_button = function(){
+
+        
+        
+    };
+
+
+
+
+
+
 
 
   }]);

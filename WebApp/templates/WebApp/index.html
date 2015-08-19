@@ -87,10 +87,10 @@
                                 <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> View Profile </a>
                             </li>
                             <li>
-                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Logout </a>
+                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Favourites </a>
                             </li>
                             <li>
-                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Favourites </a>
+                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal" ng-click = "logout()"> Logout </a>
                             </li>
                       </ul>
                       </li>
@@ -102,15 +102,16 @@
 
        <div style="margin-left:20px;">
 
-      <span ng-if="searching" style="align:center;">
-          Number of Results found:  {{ numFound }}
-      </span>
+        <div ng-if = "searching" class="alert alert-dismissable alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p>Number of Results found:  {{ numFound }} </p>
+        </div>
 
       <div class="event" ng-repeat="event in events">
           <div class="row">
               <div class="col-lg-12">
                   <div class="page-header">
-                      <h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6>
+                      <div class = "text-inline"><h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> </div>
                       <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
                       <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
                   </div>
@@ -122,12 +123,12 @@
           <div class="row">
               <div class="col-lg-2">
  
-                <div ng-if="event.image_thumbnail_url">
-                 <img ng-src={{event.image_thumbnail_url}} height="120" width="120">
+                <div ng-if="event.image_thumbnail_url" ng-href = {{event.image_thumbnail_url}}>
+                 <img ng-src={{event.image_thumbnail_url}}  height="150" width="150">
                 </div>
                 <div ng-if="!event.image_thumbnail_url">
                   {% endverbatim %}
-                  <img src="{% static 'WebApp/img/dummy.png' %}" height="120" width="120">
+                  <img src="{% static 'WebApp/img/dummy.png' %}" height="150" width="150">
                   {% verbatim %}
                 </div>
                   <!-- <p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p> -->
@@ -171,7 +172,7 @@
 
 
 
-<!-- -Login Modal -->
+<!-- -User Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content login-modal">
@@ -186,11 +187,13 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a id="signin-taba" href="#home" aria-controls="home" role="tab" data-toggle="tab">Sign In</a></li>
                             <li role="presentation"><a id="signup-taba" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a></li>
-                            <li role="presentation"><a id="forgetpass-taba" href="#forget_password" aria-controls="forget_password" role="tab" data-toggle="tab">Forget Password</a></li>
+                            <li role="presentation"><a id="forgetpass-taba" href="#forget_password" aria-controls="forget_password" role="tab" data-toggle="tab">Forgot Password</a></li>
                         </ul>
                     
                         <!-- Tab panes -->
                         <div class="tab-content">
+
+                        <!-- login -->
                             <div role="tabpanel" class="tab-pane active text-center" id="home">
                                 &nbsp;&nbsp;
                                 <span id="login_fail" class="response_error" style="display: none;">Loggin failed, please try again.</span>
@@ -199,44 +202,76 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                                            <input type="text" class="form-control" id="login_username" placeholder="Username">
+                                            <input type="text" class="form-control" id="login_email" ng-model = "lmodel.email" placeholder="Email">
                                         </div>
                                         <span class="help-block has-error" id="email-error"></span>
                                     </div>
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
-                                            <input type="password" class="form-control" id="password" placeholder="Password">
+                                            <input type="password" class="form-control" id="password" ng-model = "lmodel.password" placeholder="Password">
                                         </div>
                                         <span class="help-block has-error" id="password-error"></span>
                                     </div>
-                                    <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In....">Login</button>
+                                    <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In...." ng-click = "login_button()">Login</button>
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
+
+
+
+                            <!-- register -->
                             <div role="tabpanel" class="tab-pane" id="profile">
                                 &nbsp;&nbsp;
-                                <span id="registration_fail" class="response_error" style="display: none;">Registration failed, please try again.</span>
+                                <span ng-if="reg_complete == false" id="registration_fail" class="response_error"  style="display: none;">Registration failed, please try again.</span>
                                 <div class="clearfix"></div>
                                 <form>
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                                            <input type="text" class="form-control" id="username" placeholder="Username">
+                                            <input type="text" class="form-control" id="fname" placeholder="First Name" ng-model = "rmodel.fname" >
+                                        </div>
+                                        <span class="help-block has-error" data-error='0' id="username-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                            <input type="text" class="form-control" id="lname" placeholder="Last Name" ng-model = "rmodel.lname" >
                                         </div>
                                         <span class="help-block has-error" data-error='0' id="username-error"></span>
                                     </div>
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-at"></i></div>
-                                            <input type="text" class="form-control" id="remail" placeholder="Email">
+                                            <input type="text" class="form-control" id="remail" placeholder="Email" ng-model = "rmodel.email" required>
                                         </div>
                                         <span class="help-block has-error" data-error='0' id="remail-error"></span>
                                     </div>
-                                    <button type="button" id="register_btn" class="btn btn-block bt-login" data-loading-text="Registering....">Register</button>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-at"></i></div>
+                                            <input type="text" class="form-control" id="rpassword" placeholder="Password" ng-model = "rmodel.password" required>
+                                        </div>
+                                        <span class="help-block has-error" data-error='0' id="password-error"></span>
+                                    </div>
+
+
+                                    <button type="button" id="register_btn" class="btn btn-block bt-login" data-loading-text="Registering...." ng-click = "register_button()" >Register</button>
                                     <div class="clearfix"></div>
                                 </form>
+
+                                <div ng-if="registered">
+                                    <div class="alert alert-success " > Great!  You've successfully registered.</div>
+                                </div>
+
+
                             </div>
+
+
+
+                            <!-- forgot password -->
+
                             <div role="tabpanel" class="tab-pane text-center" id="forget_password">
                                 &nbsp;&nbsp;
                                 <span id="reset_fail" class="response_error" style="display: none;"></span>
@@ -245,12 +280,12 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                                                <input type="text" class="form-control" id="femail" placeholder="Email">
+                                                <input type="text" class="form-control" id="femail" placeholder="Email" ng-model = "fmodel.email">
                                             </div>
                                             <span class="help-block has-error" data-error='0' id="femail-error"></span>
                                         </div>
                                         
-                                        <button type="button" id="reset_btn" class="btn btn-block bt-login" data-loading-text="Please wait....">Forget Password</button>
+                                        <button type="button" id="reset_btn" class="btn btn-block bt-login" data-loading-text="Please wait...." ng-click = "forgot_button()">Forgot Password</button>
                                         <div class="clearfix"></div>                                        
                                     </form>
                                 </div>

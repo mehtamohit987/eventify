@@ -1,1 +1,1 @@
-angular.module("eventify",[]);
+angular.module("eventify");//,['ngCookies']
