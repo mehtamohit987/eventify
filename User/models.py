@@ -1,24 +1,31 @@
 from mongoengine import *
 from Events.models import Event
-
-
-class UserFavourite(Document):
-	fav_event 		= ReferenceField(Event)
-	timestamp 		= DateTimeField()
+from datetime import datetime
 
 
 class User(Document):
-	fname 			= StringField(max_length=100)
-	lname			= StringField(max_length=100)
-	email 			= StringField(max_length=256)
-	password		= StringField(max_length=256)
+	fname 			= StringField(max_length=100, default='')
+	lname			= StringField(max_length=100, default='')
+	email 			= StringField(max_length=256, required=True)
+	password		= StringField(max_length=256, required=True)
 	
-	address			= StringField(max_length=256, required=True)
-	city		 	= StringField(max_length=25)
-	country			= StringField(max_length=16)
-	postal_code 	= StringField(max_length=15)
-	coordinates 	= StringField()
+	address			= StringField(max_length=512, default='')
+	city		 	= StringField(max_length=100, default='')
+	country			= StringField(max_length=16, default='')
+	postal_code 	= StringField(max_length=50, default='')
+	coordinates 	= StringField(default='')
 		
-	favourites 		= ListField(UserFavourite)
+	# favourites 		= ListField(field=EmbeddedDocumentField(UserFavourite))
 
 	meta 			= {	'allow_inheritance'	: False, }
+
+
+
+class UserFavourite(Document):
+	user 			= ReferenceField(User)
+	fav_event 		= ReferenceField(Event) #, reverse_delete_rule='CASCADE'
+	timestamp 		= DateTimeField(default=datetime.now())
+	def save(self, *args, **kwargs):
+		if not self.timestamp:
+			self.timestamp = datetime.now()
+		return super(UserFavourite, self).save(*args, **kwargs)

@@ -3,19 +3,19 @@ from .models import Dummy
 
 
 class EventIndex(indexes.SearchIndex, indexes.Indexable):
-	text				= indexes.CharField(document=True)	
+	text				= indexes.CharField(document=True, boost=2.5)	
 	start_timestamp 	= indexes.DateTimeField()
 	end_timestamp 		= indexes.DateTimeField()
-	description 		= indexes.CharField()
+	description 		= indexes.CharField(boost=2.0)
 
-	organizer 			= indexes.CharField()
-	event_category 		= indexes.CharField()
+	organizer 			= indexes.CharField(boost=1.25)
+	event_category 		= indexes.CharField(boost=2.0)
 	
 	address			 	= indexes.CharField()
-	city		 		= indexes.CharField()
-	country			 	= indexes.CharField()
+	city		 		= indexes.CharField(boost=1.5)
+	country			 	= indexes.CharField(boost=1.25)
 	postal_code 		= indexes.CharField()
-	coordinates 		= indexes.CharField() #LocationField
+	coordinates 		= indexes.CharField(boost=1.10) #LocationField
 
 	image_thumbnail_url = indexes.CharField()
 	info_url 			= indexes.CharField()

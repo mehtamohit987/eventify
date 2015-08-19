@@ -21,6 +21,7 @@ class EventSerializer(CustomDocumentSerializer):
 	class Meta:
 		model 	= Event
 		fields 	= ('id', 'title', 'start_timestamp', 'end_timestamp', 'description', 'organizer', 'event_category', 'address', 'city', 'country', 'postal_code', 'coordinates', 'image_thumbnail_url', 'info_url', 'django_id', 'django_ct')
+		read_only_fields=('id', )
 		# depth = 2
 
 	# def to_naive(self, obj):

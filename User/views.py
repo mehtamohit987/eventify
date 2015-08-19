@@ -1,14 +1,17 @@
-from .models import User
-from .serializers import UserSerializer
+from .models import User, UserFavourite
+from Events.models import Event
+from .serializers import UserSerializer, UserFavouriteSerializer
 from rest_framework_mongoengine import generics as drfme_generics
 from rest_framework.response import Response
-from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from django.contrib.auth import login,logout
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from mongotoken import MongoToken
 from authentication import MongoAuthentication
-
+from django.http import Http404
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 
 class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
@@ -22,6 +25,7 @@ class UserList(drfme_generics.ListCreateAPIView):
 	#permission_classes=IsAuthenticated
 	# model=UserInfo
 	serializer_class=UserSerializer
+	# authentication_classes = [MongoAuthentication,]
 
 class ObtainAuthToken(APIView):
 	serializer_class=UserSerializer
@@ -43,7 +47,107 @@ class ObtainAuthToken(APIView):
 			return Response({'token': None})
 		
 
+class FavouriteList(drfme_generics.ListCreateAPIView):
+	queryset = UserFavourite.objects.all()
+	serializer_class = UserFavouriteSerializer
+	paginate_by = 10
+	authentication_classes = [MongoAuthentication,]
 
+	def create(self, request, *args, **kwargs):
+		print request.data
+		print request.user.id
+		print request.auth
+		
+		if request.auth != None and request.user != None:
+			data = { 'fav_event': request.data['fav_event'], 'user': request.user.id }
+			serializer = self.get_serializer(data=data)
+			serializer.is_valid(raise_exception=True)
+			print serializer.data
+			self.perform_create(serializer)
+			headers = self.get_success_headers(serializer.data)
+			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+		else:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+
+	
+	# def get_object():
+	# 	pass
+	
+	# def get_queryset(self):
+	# 	print self.request.user, self.request.auth
+	# 	# if 'HTTP_AUTHORIZATION' in self.request.META:
+	# 	# 	current_user_token = MongoToken.objects.filter(key=self.request.META['HTTP_AUTHORIZATION'])
+	# 	# 	if current_user_token != None:
+	# 	# 		user_reference = current_user_token[0].user
+	# 	# 		if user_reference != None:
+	# 	# 			#return self.list(UserFavourite.objects.filter(user__id__iexact=user_reference.id))		
+	# 	# 			return self.list(UserFavourite.objects(user=user_reference))		
+	# 	# return []
+	# 	return self.list(UserFavourite.objects.all())
+
+
+
+	# def list(self, request, *args, **kwargs):
+ #        instance = self.filter_queryset(self.get_queryset())
+ #        page = self.paginate_queryset(instance)
+ #        if page is not None:
+ #            serializer = self.get_pagination_serializer(page)
+ #        else:
+ #            serializer = self.get_serializer(instance, many=True)
+ #        return Response(serializer.data)
+
+
+
+	# def perform_create(self, serializer):
+	# 	if 'HTTP_AUTHORIZATION' in self.request.META:
+	# 		current_user_token = MongoToken.objects.filter(key=self.request.META['HTTP_AUTHORIZATION'])
+	# 		if current_user_token != None:
+	# 			user_reference = current_user_token[0].user
+	# 			if user_reference != None:
+	# 				serializer.save
+	# 	return Http404
+	# 	serializer.save(user=self.request.)
+
+	# def post(self, request, *args, **kwargs):
+	# 	if 'HTTP_AUTHORIZATION' in self.request.META:
+	# 		current_user_token = MongoToken.objects.filter(key=self.request.META['HTTP_AUTHORIZATION'])
+	# 		if current_user_token != None:
+	# 			user_reference = current_user_token[0].user
+	# 			if user_reference != None:
+	# 				return self.create(request, *args, user=user_reference, **kwargs)
+	# 	return Http404
+	
+
+class FavouriteDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
+	queryset = UserFavourite.objects.all()
+	serializer_class = UserFavouriteSerializer
+	lookup_field = 'id'
+	authentication_classes = [MongoAuthentication,]
+
+	# def get_object(self):
+	# 	queryset = self.get_queryset()
+	# 	queryset = self.filter_queryset(queryset)
+	# 	# filter = {}
+	# 	# for field in self.lookup_fields:
+	# 	# 	filter[field] = self.kwargs[field]
+	# 	return get_document_or_404(queryset, user__id__iexact=self.kwargs['user'], id__iexact=self.kwargs['fav_id'])
+
+
+
+		# queryset = self.get_queryset()             # Get the base queryset
+  #         # Apply any filter backends
+  #       return get_object_or_404(queryset, user__id__iexact=self.kwargs['user'], id__iexact=self.kwargs['fav_id'])	 # **filter)
+        
+
+	# def get_queryset(self):
+	# 	if 'HTTP_AUTHORIZATION' in self.request.META:
+	# 		current_user_token = MongoToken.objects.filter(key=self.request.META['HTTP_AUTHORIZATION'])
+	# 		if current_user_token != None:
+	# 			user_reference = current_user_token[0].user
+	# 			if user_reference != None:
+	# 				return self.list(UserFavourite.objects(user=user_reference))		
+	# 	return []
+	
 
 # class UserLogin(APIView):
 
@@ -68,49 +172,84 @@ class ObtainAuthToken(APIView):
 # 	queryset = User.objects
 # 	# lookup_field = 'id'
 # 	serializer_class = UserSerializer
-'''
-class Login(drfme_generics.APIView):
-	pass
-class Favourite(drfme_generics.APIView):
-	pass
-'''
-""""
 
-user/favourite/<id>	=	GET, POST, delete
+
+
+# class Login(drfme_generics.APIView):
+# 	pass
+# class Favourite(drfme_generics.APIView):
+# 	pass
+
+
+
+
+# user/favourite/<id>	=	GET, POST, delete
 
 
 #pseudeocode
-class Favourite(APIView):
-	def get(self, request):
-		current_user = User.objects.filter(request.SESSION['id'])
+
+# class Favourite(drfme_generics.ListCreateAPIView):
+# 	paginate_by = 10
+# 	serializer_class = UserFavouriteSerializer
+
+# 	def get_queryset(self):
+# 		if 'HTTP_AUTHORIZATION' in self.request.META:
+# 			current_user_token = MongoToken.objects.filter(key=self.request.META['HTTP_AUTHORIZATION'])
+# 			if current_user_token != None:
+# 				user_reference = current_user_token[0].user
+# 				current_user = User.objects(_id=user_reference)
+# 				if current_user != None:
+# 					return self.list(current_user[0].favourites)		
+# 		return []
 
 
-		# check specifically for reference fields
 
-	#put??? resource doesnt't exxist yet but more aligned to put
-	def post(self, request, id):
-		#find 
-		q = Event.objects.filter(id__exact=id)
-		if len(q) > 0:
-			current_user = User.objects.get(id  = request.SESSION['id'])
+# class Favourite(APIView):
+# 	def get(self, request, format=None):
+# 		if 'HTTP_AUTHORIZATION' in request.META:
+# 			current_user_token = MongoToken.objects.filter(key=request.META['HTTP_AUTHORIZATION'])
+# 			if current_user_token != None:
+# 				user_reference = currentFUserFavorite_user_token[0].user
+# 				if user_reference != None:
+# 					return Response(UserFavouriteSerializer(user_reference.favourites, many=True).data)
+# 		raise Http404
 
-			# check specifically for reference fields
 
-			if q[0] not in current_user.favourites:
-				current_user.favourites.appendd(q[0])
-				current_user.save()
+# 	def post(self, request):
+# 		if 'HTTP_AUTHORIZATION' in request.META:
+# 			current_user_token = MongoToken.objects.filter(key=request.META['HTTP_AUTHORIZATION'])
+# 			if current_user_token != None:
+# 				user_reference = current_user_token[0].user
+# 				if user_reference != None:
+# 					if 'event_id' in request.POST:
+# 						ev = Event.objects(id__iexact=request.POST['event_id'])
+# 						if len(ev) > 0:
+# 							event_to_fav = ev[0]
+# 							if event_to_fav not in user_reference.favourites:
+# 								u = UserFavourite() 
+# 								u.fav_event = event_to_fav
+# 								# u.save()
+# 								user_reference.favourites.append(u)
+# 								user_reference.save()
+# 							return Response(UserFavouriteSerializer(user_reference.favourites, many=True).data, status=status.HTTP_201_CREATED)
+# 		raise Http404
 
-		
-	def delete(self, request, id):
-		q = Event.objects.filter(id__exact=id)
-		if len(q) > 0:
-			current_user = User.objects.filter(request.SESSION['id'])
-
-			# check specifically for reference fields
-
-			if q[0] in current_user.favourites:
-				current_user.favourites.remove(q[0])
-				current_user.save()
-
-		
-"""
+	# def delete(self, request):
+	# 	if 'HTTP_AUTHORIZATION' in request.META:
+	# 		current_user_token = MongoToken.objects.filter(key=request.META['HTTP_AUTHORIZATION'])
+	# 		if current_user_token != None:
+	# 			user_reference = current_user_token[0].user
+	# 			if user_reference != None:
+	# 				if 'event_id' in request.POST:
+	# 					ev = Event.objects(id__iexact=request.POST['event_id'])
+	# 					if len(ev) > 0:
+	# 						event_to_fav = ev[0]
+	# 						if event_to_fav in user_reference.favourites: 
+	# 							user_reference.favourites.remove(UserFavourite(fav_event=event_to_fav))
+	# 							user_reference.save()
+	# 							return Response(UserFavouriteSerializer(user_reference.favourites, many=True).data, status=status.HTTP_201_CREATED)
+	# 						else:
+	# 							return Response(status=status.HTTP_204_NO_CONTENT)
+	# 					else:
+	# 						return Response(status=status.HTTP_204_NO_CONTENT)
+	# 	raise Http404
