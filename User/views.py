@@ -12,17 +12,26 @@ from authentication import MongoAuthentication
 from django.http import Http404
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from .permissions import IsTheSameUser
+import datetime
+from django.utils.timezone import utc
+
 
 
 class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	queryset=User.objects.all()
+	lookup_field = 'id'
+	lookup_url_kwarg = 'user_id'
 	serializer_class=UserSerializer
-	lookup_field = 'pk'
 	authentication_classes = [MongoAuthentication,]
+	# permission_classes = (IsAuthenticated, )
 
 class UserList(drfme_generics.ListCreateAPIView):
 	queryset=User.objects.all()
-	#permission_classes=IsAuthenticated
+	lookup_field = 'id'
+	lookup_url_kwarg = 'user_id'
+	authentication_classes = [MongoAuthentication,]
+	# permission_classes = (IsAuthenticated, )
 	serializer_class=UserSerializer
 
 class ObtainAuthToken(APIView):
@@ -39,40 +48,67 @@ class ObtainAuthToken(APIView):
 			if str(user.password)!=str(password):
 				return Response({'token': None})
 			else:
-				token, created = MongoToken.objects.get_or_create(user=user)
+
+				token, created = MongoToken.objects.get_or_create(user=user, created__gt= datetime.datetime.utcnow()- datetime.timedelta(hours=24))
 				return Response({'token':token.key})
 		else:
 			return Response({'token': None})
 		
 
 class FavouriteList(drfme_generics.ListCreateAPIView):
-	queryset = UserFavourite.objects.all()
+	# queryset = UserFavourite.objects.all()
 	serializer_class = UserFavouriteSerializer
 	paginate_by = 10
-	authentication_classes = [MongoAuthentication,]
 
+	authentication_classes = [MongoAuthentication,]
+	permission_classes = (IsTheSameUser, )
+	
 	def create(self, request, *args, **kwargs):
-		print request.data
-		print request.user.id
-		print request.auth
-		
 		if request.auth != None and request.user != None:
+			if 'user_id' not in  self.kwargs or str(request.user.id) != self.kwargs['user_id']:
+				return Response(status=status.HTTP_403_FORBIDDEN)	
+
 			data = { 'fav_event': request.data['fav_event'], 'user': request.user.id }
 			serializer = self.get_serializer(data=data)
 			serializer.is_valid(raise_exception=True)
-			print serializer.data
+			# print serializer.data
 			self.perform_create(serializer)
 			headers = self.get_success_headers(serializer.data)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 		else:
 			return Response(status=status.HTTP_404_NOT_FOUND)
 
+	def get(self, request, *args, **kwargs):
+		if request.auth != None and request.user != None and ('user_id' not in  self.kwargs or str(request.user.id) != self.kwargs['user_id']):
+			return Response(status=status.HTTP_403_FORBIDDEN)
+		return self.list(request, *args, **kwargs)
+
+	def get_queryset(self):
+		if 'user_id' in self.kwargs and len(self.kwargs['user_id']) == 24:
+			return UserFavourite.objects(user=self.kwargs['user_id'])
+		else:
+			return UserFavourite.objects.none()
+
+	# def filter_queryset(self, queryset):
+	# 	filter_backends = (,)
+
 
 class FavouriteDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	queryset = UserFavourite.objects.all()
 	serializer_class = UserFavouriteSerializer
 	lookup_field = 'id'
+	lookup_url_kwarg = 'id'
 	authentication_classes = [MongoAuthentication,]
+	permission_classes = (IsTheSameUser, )
+
+	# def get_queryset(self):
+	# 	print IsTheSameUser
+	# 	print self.kwargs
+	# 	if 'user_id' in self.kwargs and len(self.kwargs['user_id']) == 24:
+	# 		print "here"
+	# 		return UserFavourite.objects(user=self.kwargs['user_id'])
+	# 	else:
+	# 		return UserFavourite.objects.none()
 
 
 	# def get_object():

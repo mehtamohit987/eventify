@@ -43,6 +43,7 @@ class MongoAuthentication(TokenAuthentication):
 			msg = _('Invalid token header. Token string should not contain invalid characters.')
 			raise exceptions.AuthenticationFailed(msg)
 		
+
 		return self.authenticate_credentials(token)
 
 			
