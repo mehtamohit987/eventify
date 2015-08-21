@@ -1,6 +1,6 @@
 (function(){
 
-	var eventify = angular.module("eventify", ,['ngRoute']);
+	var eventify = angular.module("eventify", ['ngRoute']);
 
 	eventify.config(['$routeProvider', 
 	    function($routeProvider){
@@ -9,25 +9,25 @@
 
 	        when('/',{
 
-	            templateUrl: 'home',
-	            controller: 'mainController'
+	            templateUrl: '/static/WebApp/templates/home.html',
+	            controller: 'homeController'
 
 	        }).
 	        when('/search',{
 
-	            templateUrl: 'search',
+	            templateUrl: '/static/WebApp/templates/search.html',
 	            controller: 'searchController'
 
 	        }).
 	        when('/profile',{
 
-	            templateUrl: 'profile',
+	            templateUrl: '/static/WebApp/templates/profile.html',
 	            controller: 'profileController'
 
 	        }).
 	        when('/myfav',{
 
-	            templateUrl: 'myfav',
+	            templateUrl: '/static/WebApp/templates/myfav.html',
 	            controller: 'myfavController'
 
 	        }).
