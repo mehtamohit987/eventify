@@ -90,7 +90,7 @@
 
                 page: 0,
                 titleQuery: $scope.titleQuery,
-                selected_timerange: $scope.selected_timerange,
+                selected_time_range: $scope.selected_time_range,
                 date: date,
                 coordinates: $scope.coordinates,
                 selected_country: $scope.selected_country

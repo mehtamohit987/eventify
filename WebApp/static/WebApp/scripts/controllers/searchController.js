@@ -5,7 +5,7 @@
 
     eventify.controller('searchController', function ($scope, $http, $routeParams) {
 
-        var host =  'localhost';
+        var host =  '172.16.65.209';
         var port = '8000';
 
         console.log('searchController')
@@ -19,14 +19,14 @@
         $scope.currentPage = 0;
         $scope.testing = 'test';
 
-         var page = 0, titleQuery = null, selected_timerange = null, date = null, coordinates = null, selected_country= null;
+         var page = 0, titleQuery = null, selected_time_range = null, date = null, coordinates = null, selected_country= null;
 
 
-        $scope.on('searchHit',function(event, args){
+        $scope.$on('searchHit',function(event, args){
 
     	 	page = args.page;
             titleQuery = args.titleQuery;
-            selected_timerange = args.selected_timerange;
+            selected_time_range = args.selected_time_range;
             date = args.date;
             coordinates = args.coordinates;
             selected_country = args.selected_country;
@@ -53,9 +53,11 @@
 
                 var url = (p==0 ? "http://" + host + ":" + port +"/api/events/?q=" + String(x) + z + y + c : ( p==-1? $scope.prevExists : $scope.nextExists )  )
 
+                // window.location.assign('search');
                 $http.get(url)
                     .success(function(data){
             			console.log('hamse na ho paega')
+
                         $scope.events = data.results;
                         $scope.prevExists = data['previous'];
                         $scope.nextExists = data['next'];
@@ -105,10 +107,10 @@
         };
 
 
-        $scope.search_button = function(){
-            renderDate()
-            renderContent(0)        
-        };
+        // $scope.search_button = function(){
+        //     renderDate()
+        //     renderContent(0)        
+        // };
 
 
 
