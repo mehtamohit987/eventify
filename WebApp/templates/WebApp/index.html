@@ -78,19 +78,19 @@
                       <ul class="nav navbar-nav" style="margin-left:60px;">
 
 
-                      <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Login </a></li>
+                      <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Login/SignUp </a></li>
                        
                        <li ng-if="loggedIn">
                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Me <b class="caret"></b></a>
                        <ul class="dropdown-menu">
                             <li>
-                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> View Profile </a>
+                                <a class="btn btn-launch"> View Profile </a>
                             </li>
                             <li>
-                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Favourites </a>
+                                <a class="btn btn-launch"> Favourites </a>
                             </li>
                             <li>
-                                <a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal" ng-click = "logout()"> Logout </a>
+                                <a class="btn btn-launch" ng-click="logout()"> Logout </a>
                             </li>
                       </ul>
                       </li>
@@ -100,70 +100,90 @@
            </div>
        </div>
 
-       <div style="margin-left:20px;">
 
-        <div ng-if = "searching" class="alert alert-dismissable alert-success">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <p>Number of Results found:  {{ numFound }} </p>
-        </div>
 
-      <div class="event" ng-repeat="event in events">
-          <div class="row">
-              <div class="col-lg-12">
-                  <div class="page-header">
-                      <div class = "text-inline"><h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> </div>
-                      <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
-                      <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
+      <div ng-if="registered" style="margin-left:20px; text-align:center;" class="alert alert-success  alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p> Great!  You've successfully registered.</p>
+      </div>
+
+    <div ng-view></div>
+
+
+
+    <script type="text/ng-template" id="searchView">
+                <div ng-if = "searching" class="alert alert-dismissable alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <p>Number of Results found:  {{ numFound }} </p>
+                </div>  
+
+                 <div style="margin-left:20px;">
+
+                  <div ng-if = "searching" class="alert alert-dismissable alert-success">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <p>Number of Results found:  {{ numFound }} </p>
                   </div>
+
+                <div class="event" ng-repeat="event in events">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="page-header">
+                                <div class = "text-inline"><h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> </div>
+                                <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
+                                <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Headings -->
+                    <div class="row">
+                        <div class="col-lg-2">
+           
+                          <div ng-if="event.image_thumbnail_url" ng-href = {{event.image_thumbnail_url}}>
+                           <img ng-src={{event.image_thumbnail_url}}  height="150" width="150">
+                          </div>
+                          <div ng-if="!event.image_thumbnail_url">
+                            {% endverbatim %}
+                            <img src="{% static 'WebApp/img/dummy.png' %}" height="150" width="150">
+                            {% verbatim %}
+                          </div>
+                            <!-- <p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p> -->
+                        </div>
+                        <div class="col-lg-10 jumbotron">
+
+
+                            <p style="font-size:12px;">{{event.description | limitTo: 500}} 
+                            <a ng-href={{event.info_url}}>...(continue reading)...<a>
+                            </p>
+                            <p style="font-size:12px;">Address: {{event.address | limitTo: 50}}</p>
+                            
+                        </div>
+                        
+                    </div>
+                  </div>
+
+              <div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
+              <ul class="pager">
+              <li class="previous" ng-click="prevPage()" ng-if="prevExists">
+              <a>Previous</a>
+              </li>
+              <li class="next" ng-click="nextPage()" ng-if="nextExists">
+              <a>Next</a>
+              </li>
+              </ul>
               </div>
-          </div>
 
-
-          <!-- Headings -->
-          <div class="row">
-              <div class="col-lg-2">
- 
-                <div ng-if="event.image_thumbnail_url" ng-href = {{event.image_thumbnail_url}}>
-                 <img ng-src={{event.image_thumbnail_url}}  height="150" width="150">
-                </div>
-                <div ng-if="!event.image_thumbnail_url">
-                  {% endverbatim %}
-                  <img src="{% static 'WebApp/img/dummy.png' %}" height="150" width="150">
-                  {% verbatim %}
-                </div>
-                  <!-- <p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p> -->
               </div>
-              <div class="col-lg-10 jumbotron">
 
-
-                  <p style="font-size:12px;">{{event.description | limitTo: 500}} 
-                  <a ng-href={{event.info_url}}>...(continue reading)...<a>
-                  </p>
-                  <p style="font-size:12px;">Address: {{event.address | limitTo: 50}}</p>
-                  
-              </div>
-              
-          </div>
-        </div>
-
-    <div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
-    <ul class="pager">
-    <li class="previous" ng-click="prevPage()" ng-if="prevExists">
-    <a>Previous</a>
-    </li>
-    <li class="next" ng-click="nextPage()" ng-if="nextExists">
-    <a>Next</a>
-    </li>
-    </ul>
-    </div>
-
-    </div>
+    </script>
 
     {% endverbatim %}
 
 
     <script src="{% static 'WebApp/scripts/jquery-1.10.2.min.js' %}"></script>
     <script src="{% static 'WebApp/scripts/angular.min.js' %}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-route.min.js"></script>
     <script src="{% static 'WebApp/bootstrap/js/bootstrap.min.js' %}"></script>
     <!--script src="bootstrap/js/bootstrap.js' %}"></script-->
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/mainController.js' %}"></script>
@@ -185,9 +205,9 @@
                     <div role="tabpanel" class="login-tab">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a id="signin-taba" href="#home" aria-controls="home" role="tab" data-toggle="tab">Sign In</a></li>
+                            <li role="presentation" ng-class="{active: !passwordChangeIni}"><a id="signin-taba" href="#home" aria-controls="home" role="tab" data-toggle="tab">Sign In</a></li>
                             <li role="presentation"><a id="signup-taba" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Sign Up</a></li>
-                            <li role="presentation"><a id="forgetpass-taba" href="#forget_password" aria-controls="forget_password" role="tab" data-toggle="tab">Forgot Password</a></li>
+                            <li role="presentation" ng-if="passwordChangeIni" ng-class="{active: passwordChangeIni}"><a id="forgetpass-taba" href="#forget_password" aria-controls="forget_password" role="tab" data-toggle="tab">Forgot Password</a></li>
                         </ul>
                     
                         <!-- Tab panes -->
@@ -211,7 +231,6 @@
                                             <div class="input-group-addon"><i class="fa fa-lock"></i></div>
                                             <input type="password" class="form-control" id="password" ng-model = "lmodel.password" placeholder="Password">
                                         </div>
-                                        <span class="help-block has-error" id="password-error"></span>
                                     </div>
                                     <button type="button" id="login_btn" class="btn btn-block bt-login" data-loading-text="Signing In...." ng-click = "login_button()">Login</button>
                                     <div class="clearfix"></div>
@@ -261,14 +280,10 @@
                                     <div class="clearfix"></div>
                                 </form>
 
-                                <div ng-if="registered">
-                                    <div class="alert alert-success " > Great!  You've successfully registered.</div>
-                                </div>
+                                
 
 
                             </div>
-
-
 
                             <!-- forgot password -->
 
@@ -285,7 +300,6 @@
                                             <span class="help-block has-error" data-error='0' id="femail-error"></span>
                                         </div>
                                         
-                                        <button type="button" id="reset_btn" class="btn btn-block bt-login" data-loading-text="Please wait...." ng-click = "forgot_button()">Forgot Password</button>
                                         <div class="clearfix"></div>                                        
                                     </form>
                                 </div>
