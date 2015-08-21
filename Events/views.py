@@ -46,7 +46,19 @@ class EventList(generics.ListAPIView): # CreateDestroy
 
 
 		
-		
+def autocomplete(request):
+	sys = SearchQuerySet().autocomplete(content_auto = request.GET.get('q',''))[:5]
+	suggestions = [results.title for result in sqs]
+
+	the_data = {
+		'results': suggestions
+	}
+
+	return HttpResponse(the_data, content_type="application/json")
+
+
+
+
 		# start_offset = int(self.request.GET.get('page',1))-1
 		# end_offset = self.paginate_by+start_offset
 		# results = results[start_offset:end_offset]

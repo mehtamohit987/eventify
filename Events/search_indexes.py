@@ -3,16 +3,16 @@ from .models import Dummy
 
 
 class EventIndex(indexes.SearchIndex, indexes.Indexable):
-	text				= indexes.CharField(document=True, boost=2.5)	
+	text				= indexes.EdgeNgramField(document=True, boost=2.5)	
 	start_timestamp 	= indexes.DateTimeField()
 	end_timestamp 		= indexes.DateTimeField()
 	description 		= indexes.CharField(boost=2.0)
 
 	organizer 			= indexes.CharField(boost=1.25)
-	event_category 		= indexes.CharField(boost=2.0)
+	event_category 		= indexes.CharField(boost=2.0) #EdgeNgram
 	
 	address			 	= indexes.CharField()
-	city		 		= indexes.CharField(boost=1.5)
+	city		 		= indexes.CharField(boost=1.5) #EdgeNgram
 	country			 	= indexes.CharField(boost=1.25)
 	postal_code 		= indexes.CharField()
 	coordinates 		= indexes.CharField(boost=1.10) #LocationField
