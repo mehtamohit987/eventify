@@ -23,15 +23,11 @@ class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	lookup_field = 'id'
 	lookup_url_kwarg = 'user_id'
 	serializer_class=UserSerializer
-	authentication_classes = [MongoAuthentication,]
-	# permission_classes = (IsAuthenticated, )
 
 class UserList(drfme_generics.ListCreateAPIView):
 	queryset=User.objects.all()
 	lookup_field = 'id'
 	lookup_url_kwarg = 'user_id'
-	authentication_classes = [MongoAuthentication,]
-	# permission_classes = (IsAuthenticated, )
 	serializer_class=UserSerializer
 
 class ObtainAuthToken(APIView):
@@ -56,7 +52,6 @@ class ObtainAuthToken(APIView):
 		
 
 class FavouriteList(drfme_generics.ListCreateAPIView):
-	# queryset = UserFavourite.objects.all()
 	serializer_class = UserFavouriteSerializer
 	paginate_by = 10
 
@@ -71,7 +66,6 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 			data = { 'fav_event': request.data['fav_event'], 'user': request.user.id }
 			serializer = self.get_serializer(data=data)
 			serializer.is_valid(raise_exception=True)
-			# print serializer.data
 			self.perform_create(serializer)
 			headers = self.get_success_headers(serializer.data)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -89,8 +83,6 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 		else:
 			return UserFavourite.objects.none()
 
-	# def filter_queryset(self, queryset):
-	# 	filter_backends = (,)
 
 
 class FavouriteDetail(drfme_generics.RetrieveUpdateDestroyAPIView):

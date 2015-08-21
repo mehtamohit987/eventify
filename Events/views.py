@@ -21,9 +21,6 @@ class EventList(generics.ListAPIView): # CreateDestroy
 	serializer_class = EventSearchSerializer
 	paginate_by = 10
 	def get_queryset(self):
-		#print "here"
-		# request
-		# print self.request
 		D = self.request.GET
 		K = self.request.GET.viewkeys()
 
@@ -67,7 +64,6 @@ class EventList(generics.ListAPIView): # CreateDestroy
 
 class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	queryset = Event.objects
-	# lookup_field = 'id'
 	serializer_class = EventSerializer
 
 
