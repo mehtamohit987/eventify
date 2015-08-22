@@ -67,9 +67,9 @@
                                </select>
                                
 
-                               <button type="Submit" class="btn btn-default glyphicon glyphicon-map-marker form-control" ng-click="location_button()"></button>
+                               <button class="btn btn-default glyphicon glyphicon-map-marker form-control" ng-click="location_button()"></button>
 
-                               <button type="Submit" class="btn btn-default form-control" ng-click="search_button()" ng-disabled="disableSearch">Submit</button>
+                               <button type="Submit" id="search_button" class="btn btn-default form-control" ng-click="search_button()" ng-disabled="disableSearch">Submit</a></button>
                                
                            </div>
 
@@ -83,13 +83,13 @@
                       <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Login/SignUp </a></li>
                        
                        <li ng-if="loggedIn">
-                       <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Me <b class="caret"></b></a>
+                       <a class="dropdown-toggle" data-toggle="dropdown"> Me <b class="caret"></b></a>
                        <ul class="dropdown-menu">
                             <li>
-                                <a class="btn btn-launch"> View Profile </a>
+                                <a class="btn btn-launch" href="#myprofile"> View Profile </a>
                             </li>
                             <li>
-                                <a class="btn btn-launch"> Favourites </a>
+                                <a class="btn btn-launch" href="#myfav"> Favourites </a>
                             </li>
                             <li>
                                 <a class="btn btn-launch" ng-click="logout()"> Logout </a>
@@ -255,7 +255,7 @@
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/searchController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/homeController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myfavController.js' %}"></script>
-    <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/profileController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myprofileController.js' %}"></script>
 
 </body>
 

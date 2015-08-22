@@ -3,7 +3,7 @@
 
     var eventify = angular.module("eventify");
 
-    eventify.controller('mainController', ['$scope', '$http', function ($scope, $http) {
+    eventify.controller('mainController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
         var host =  'localhost';//'172.16.65.209'; //
         var port = '8000';
@@ -18,13 +18,15 @@
         $scope.disableSearch = true;
 
 
-
         $scope.registered = false
 
 
-        $scope.loggedIn = true
+        $scope.loggedIn = false
         $scope.authToken = null
         $scope.user_id = null
+
+
+        var search_button_pressed = false;
 
         if ($scope.authToken == null && typeof(Storage) != "undefined" && localStorage.hasOwnProperty('authToken')) {
             $scope.authToken = localStorage.getItem("authToken");
@@ -43,7 +45,6 @@
 
         var renderDate = function(){
 
-
             date = [];
             var curr = new Date();
             var curr_stripped = (curr.toJSON()).substring(0,19);
@@ -58,9 +59,7 @@
             var next_month_stripped = (curr.toJSON()).substring(0,10) + "T00:00:00";    
             date.push({time_start: curr_stripped , time_end: next_month_stripped});
 
-
         }
-
 
 
 
@@ -68,8 +67,13 @@
             if($scope.titleQuery==null||$scope.titleQuery==''){
                 $scope.disableSearch = true;
             }
+            else if(search_button_pressed){
+                search_button_pressed = false;
+                $location.url('/search');
+            }
             else{
                 $scope.disableSearch=false;
+                $location.url('/search');
             }
 
         };
@@ -82,10 +86,9 @@
         };
 
         $scope.search_button = function(){
-            renderDate()
-
-            console.log('hamse ho paega')
-
+            search_button_pressed = true
+            $scope.queryChanged();
+            renderDate();
             $scope.$root.$broadcast("searchHit",{
 
                 page: 0,
@@ -98,7 +101,6 @@
 
         };
 
-        //user
         $scope.lmodel = {};
         $scope.rmodel = {};
 
@@ -151,9 +153,6 @@
                 .error(function(data){
                     $scope.loggedIn=false;
                     $scope.authToken = null;
-
-                    
-
                 });
             }
 

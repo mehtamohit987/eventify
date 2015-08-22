@@ -5,10 +5,8 @@
 
     eventify.controller('searchController', function ($scope, $http, $routeParams) {
 
-        var host =  '172.16.65.209';
+        var host =  'localhost';
         var port = '8000';
-
-        console.log('searchController')
 		
         $scope.events = []
     
@@ -17,9 +15,8 @@
         $scope.prevExists = null
         $scope.nextExists = null
         $scope.currentPage = 0;
-        $scope.testing = 'test';
-
-         var page = 0, titleQuery = null, selected_time_range = null, date = null, coordinates = null, selected_country= null;
+        
+        var page = 0, titleQuery = null, selected_time_range = null, date = null, coordinates = null, selected_country= null;
 
 
         $scope.$on('searchHit',function(event, args){
@@ -37,7 +34,7 @@
             
 
         var renderContent = function(p){
-        	console.log('hamse na ho paega')
+        	console.log('hamse kaise ho paega - be optimistic')
 
             x = titleQuery;
            
@@ -56,7 +53,8 @@
                 // window.location.assign('search');
                 $http.get(url)
                     .success(function(data){
-            			console.log('hamse na ho paega')
+                        console.log(data)
+            			console.log('chu hai kya? hamse bilkul na ho paega')
 
                         $scope.events = data.results;
                         $scope.prevExists = data['previous'];
@@ -67,7 +65,7 @@
                         {
                             $scope.searching = true;
                             $scope.numFound = data.count;
-                            $scope.currentPage = 1;
+                            if ($scope.currentPage==null || p==0) {$scope.currentPage = 1;}
                         }
                         
                 })
@@ -89,7 +87,7 @@
 
         $scope.prevPage = function($event){
 
-            renderDate();
+            // renderDate();
             renderContent(-1);
 
             $scope.currentPage --;
@@ -100,7 +98,7 @@
 
         $scope.nextPage = function($event){
 
-            renderDate();
+            // renderDate();
             renderContent(1)
             $scope.currentPage ++;
             console.log('next_page')

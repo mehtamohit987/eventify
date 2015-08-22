@@ -1,0 +1,54 @@
+ <div style="margin-left:20px;">
+
+<div class="event" ng-repeat="fav in favs">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <div class = "text-inline"><h3>{{fav.fav_event.title | limitTo: 14}} </h3><h6>Organized by: {{fav.fav_event.organizer | limitTo: 10}}</h6> </div>
+                <h4>{{fav.fav_event.city  | limitTo: 20}}, {{fav.fav_event.country}}</h6>
+                <h6>{{fav.fav_event.start_timestamp.substring(0,10) + 'at' +  fav.fav_event.start_timestamp.substring(11,19)}}</h6>
+                <button ng-if="fav.fav_event.is">Unfavourite</button>
+                <button ng-if="!fav.fav_event.is">Favourite</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Headings -->
+    <div class="row">
+        <div class="col-lg-2">
+
+          <div ng-if="fav.fav_event.image_thumbnail_url" ng-href = {{fav.fav_event.image_thumbnail_url}}>
+           <img ng-src={{fav.fav_event.image_thumbnail_url}}  height="150" width="150">
+          </div>
+          <div ng-if="!fav.fav_event.image_thumbnail_url">
+            <img src="static/WebApp/img/dummy.png" height="150" width="150">
+          </div>
+        </div>
+        <div class="col-lg-10 jumbotron">
+
+
+            <p style="font-size:12px;">{{fav.fav_event.description | limitTo: 500}} 
+            <a ng-href={{fav.fav_event.info_url}}>...(continue reading)...<a>
+            </p>
+            <p style="font-size:12px;">Address: {{fav.fav_event.address | limitTo: 50}}</p>
+            
+        </div>
+        
+    </div>
+  </div>
+
+<div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
+<ul class="pager">
+<li class="previous" ng-click="prevPage()" ng-if="prevExists">
+<a>Previous</a>
+</li>
+
+<p style="text-align:center;">Page No. : {{currentPage}}</p>
+<li class="next" ng-click="nextPage()" ng-if="nextExists">
+<a>Next</a>
+</li>
+</ul>
+</div>
+
+</div>

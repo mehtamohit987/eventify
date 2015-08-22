@@ -19,10 +19,10 @@
 	            controller: 'searchController'
 
 	        }).
-	        when('/profile',{
+	        when('/myprofile',{
 
-	            templateUrl: '/static/WebApp/templates/profile.html',
-	            controller: 'profileController'
+	            templateUrl: '/static/WebApp/templates/myprofile.html',
+	            controller: 'myprofileController'
 
 	        }).
 	        when('/myfav',{
