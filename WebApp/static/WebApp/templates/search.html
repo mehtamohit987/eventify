@@ -1,0 +1,57 @@
+ <div style="margin-left:20px;">
+
+  <div ng-if = "searching" class="alert alert-dismissable alert-success">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p>Number of Results found:  {{ numFound }} </p>
+  </div>
+
+<div class="event" ng-repeat="event in events">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <div class = "text-inline"><h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> </div>
+                <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
+                <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Headings -->
+    <div class="row">
+        <div class="col-lg-2">
+
+          <div ng-if="event.image_thumbnail_url" ng-href = {{event.image_thumbnail_url}}>
+           <img ng-src={{event.image_thumbnail_url}}  height="150" width="150">
+          </div>
+          <div ng-if="!event.image_thumbnail_url">
+            <img src="static/WebApp/img/dummy.png" height="150" width="150">
+          </div>
+        </div>
+        <div class="col-lg-10 jumbotron">
+
+
+            <p style="font-size:12px;">{{event.description | limitTo: 500}} 
+            <a ng-href={{event.info_url}}>...(continue reading)...<a>
+            </p>
+            <p style="font-size:12px;">Address: {{event.address | limitTo: 50}}</p>
+            
+        </div>
+        
+    </div>
+  </div>
+
+<div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
+<ul class="pager">
+<li class="previous" ng-click="prevPage()" ng-if="prevExists">
+<a>Previous</a>
+</li>
+
+<p style="text-align:center;">Page No. : {{currentPage}}</p>
+<li class="next" ng-click="nextPage()" ng-if="nextExists">
+<a>Next</a>
+</li>
+</ul>
+</div>
+
+</div>
