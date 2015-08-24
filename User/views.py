@@ -16,7 +16,8 @@ from .permissions import IsTheSameUser
 import datetime
 from django.utils.timezone import utc
 from Events.views import EventDetail
-
+import requests
+import json
 
 
 class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
@@ -82,13 +83,15 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 			serializer.is_valid(raise_exception=True)
 			self.perform_create(serializer)
 
-			# to view of POST
-
-			
-
-
-			result = EventsDetail().as_view()(self.request)
-
+			r = requests.get('http://localhost:8000/api/events/' + request.data['fav_event'])
+			n = json.loads(r.text)['num_fav']
+			x = {'num_fav': n+1}
+			json_data = JSONRenderer().render(x)
+			r = requests.put(
+				'http://localhost:8000/api/events/' + request.data['fav_event'] + '/',
+				headers = {	"Content-Type": "application/json",	},
+				data = json_data,
+				)
 
 			headers = self.get_success_headers(serializer.data)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -120,7 +123,15 @@ class FavouriteDetail(drfme_generics.RetrieveDestroyAPIView):
 		instance = self.get_object()
 		self.perform_destroy(instance)
 
-		#to put
+		r = requests.get('http://localhost:8000/api/events/' + str(instance.fav_event.id))
+		n = json.loads(r.text)['num_fav']
+		x = {'num_fav': n-1}
+		json_data = JSONRenderer().render(x)
+		r = requests.put(
+			'http://localhost:8000/api/events/' + request.data['fav_event'] + '/',
+			headers = {	"Content-Type": "application/json",	},
+			data = json_data,
+			)
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 	# def get_queryset(self):

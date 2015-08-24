@@ -23,3 +23,9 @@ class UserFavouriteSerializer(DocumentSerializer):
 		model = UserFavourite
 		fields = ('id', 'user','fav_event', 'timestamp')
 		read_only_fields=('id',)
+
+
+	def validate(self, data):
+		if len(UserFavourite.objects(user=data['user'], fav_event=data['fav_event']))>0:
+			raise serializers.ValidationError('User has already favourited this event.')
+		return data

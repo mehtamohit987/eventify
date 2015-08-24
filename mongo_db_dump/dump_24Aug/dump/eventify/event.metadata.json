@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"eventify.event"},{"v":1,"key":{"title":1,"start_timestamp":1,"coordinates":1},"name":"title_1_start_timestamp_1_coordinates_1","ns":"eventify.event","background":false}]}

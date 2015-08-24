@@ -142,26 +142,16 @@
     </analyzer>
   </fieldType>
 
+<!-- Added for NGram field-->
   <fieldType name="edgytext" class="solr.TextField" positionIncrementGap="100">
-
- <analyzer type="index">
-
-   <tokenizer class="solr.KeywordTokenizerFactory"/>
-
-   <filter class="solr.LowerCaseFilterFactory"/>
-
-   <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="25" />
-
- </analyzer>
-
- <analyzer type="query">
-
-   <tokenizer class="solr.KeywordTokenizerFactory"/>
-
-   <filter class="solr.LowerCaseFilterFactory"/>
-
- </analyzer>
-
+	 <analyzer type="index">
+	   <tokenizer class="solr.NGramTokenizerFactory" minGramSize="2" maxGramSize="10" />
+	   <filter class="solr.LowerCaseFilterFactory"/>
+	 </analyzer>
+	 <analyzer type="query">
+	   <tokenizer class="solr.EdgeNGramTokenizerFactory" minGramSize="2" maxGramSize="10"/>
+	   <filter class="solr.LowerCaseFilterFactory"/>
+	 </analyzer>
 </fieldType>
 
   <fieldType name="text_en_splitting" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
@@ -412,7 +402,7 @@
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="long" indexed="true" stored="true"/>
   <field name="address" type="text_general" multiValued="false" indexed="true" stored="true"/>
-  <field name="city" type="edgytext" multiValued="false" indexed="true" stored="true"/>
+  <field name="city" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="coordinates" type="location_rpt" indexed="true" stored="true"/>
   <field name="country" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
@@ -420,7 +410,7 @@
   <field name="django_id" type="int" indexed="true" stored="true" multiValued="false"/>
 
   <field name="end_timestamp" type="date" indexed="true" stored="true"/>
-  <field name="event_category" type="edgytext" multiValued="false" indexed="true" stored="true"/>
+  <field name="event_category" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="image_thumbnail_url" type="strings"  multiValued="false"/>
   <field name="info_url" type="strings"  multiValued="false"/>
@@ -428,7 +418,12 @@
   <field name="organizer" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="postal_code" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="start_timestamp" type="date" indexed="true" required="true" stored="true"/>
-  <field name="title" type="edgytext" indexed="true" required="true" stored="true"  multiValued="false"/>
+  <field name="title" type="text_general" indexed="true" required="true" stored="true"  multiValued="false"/>
+  
+  <field name="title_ngram" type="edgytext" indexed="true" stored="true"/>
+	<field name="city_ngram" type="edgytext" indexed="true" stored="true"/>
+
+
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
@@ -503,4 +498,8 @@
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
   <dynamicField name="*_c" type="currency" indexed="true" stored="true"/>
   <copyField source="*" dest="_text_"/>
+<copyField source="title" dest="title_ngram"/>
+<copyField source="city" dest="city_ngram"/>
+
+
 </schema>

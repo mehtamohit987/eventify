@@ -1,21 +1,22 @@
+solr and db flush after script automatization already inconsistency with sort on num_fav, so required.	= DONE
 fav					=		DONE
 	- events post, put delte to solr reflect 	/
 	- fav/unfav behaviour						/
 	- count maintain							/
 	- top fav events							/	
 	- top nearby fav events						/
-	- fav/unfav view put delete events count
+	- fav/unfav view put delete events count	/
+auto-complete:
+	- backend done				/
+	- test on f.end.			/
 
 
 
-celery scheduling:
+automation:
 	- eventbrite
 	- eventful
 	- email scheduling
-
-
-solr and db flush after script automatization already inconsistency with sort on num_fav, so required.
-
+	- solr update
 
 Front end:
 	
@@ -34,11 +35,13 @@ Front end:
 	- calendar picker
 	- profile edit menu
 
-	
-auto-complete:
-	- backend done				/
-	- test on f.end.
 
+
+testing:
+	- event detail view
+	- log in log out register
+	- views related to permissions appropriately
+	- views related to post appropriately
 
 restrictions/permissions on:
 	- user profile view allow to other logged in user
@@ -48,11 +51,3 @@ restrictions/permissions on:
 	- event get allow
 	- event post loggedin only
 	- how to restrict put delete without associating an author to existing events (if associate an author: Modal change - organizer and author different -  default admin while script parsing)
-
-testing:
-	- event detail view
-	- log in log out register
-	- views related to permissions appropriately
-	- views related to post appropriately
-
-mongo and solr administration and hosting	

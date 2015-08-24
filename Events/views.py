@@ -2,6 +2,7 @@ from django.shortcuts import render
 from Events.models import Event, Dummy
 import requests
 import json
+from rest_framework.decorators import api_view
 from Events.serializers import EventSerializer, EventSearchSerializer
 from Events.search_indexes import EventIndex
 from rest_framework_mongoengine import generics as drfme_generics
@@ -50,9 +51,8 @@ class EventList(generics.ListCreateAPIView): # Create
 		  	P = Point(longitude, latitude) 	# (latitude, longitude)
 		  	results = results.dwithin('coordinates', P, Distance(mi=250))
 
-	  	if 'sort' in K and D.get('sort')=='true': 
-	  		# use this after flushing db and solr
-	  		# results =  results.order_by('-num_fav')
+	  	if 'sort' in K and D.get('sort')=='true':
+	  		results =  results.order_by('-num_fav')
 	  		pass
 	  		
   		return results
@@ -126,17 +126,16 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
+@api_view(['GET'])
 def autocomplete(request):
 	if request.method == 'GET':
-		sys = SearchQuerySet().autocomplete(title = request.GET.get('q',''))[:5]
+		sys = SearchQuerySet().autocomplete(title_ngram = request.GET.get('q',''))[:5]
 		suggestions = [result.title for result in sys]
 		the_data = {
 			'results': suggestions
 		}
 		json_data = JSONRenderer().render(the_data)
-		print json_data
-		return HttpResponse(the_data, content_type="application/json")
+		return HttpResponse(json_data, content_type="application/json")
 
 
 
