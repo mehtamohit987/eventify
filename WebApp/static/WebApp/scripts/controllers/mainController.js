@@ -5,7 +5,7 @@
 
     eventify.controller('mainController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
-        var host =  'localhost';//'172.16.65.209'; //
+        var host =  '172.16.65.209'; //'localhost';//
         var port = '8000';
 
         var date = [];
@@ -83,6 +83,13 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(pos){$scope.coordinates = pos['coords'];});
             }
+
+            $scope.$root.$broadcast("locationHit",{
+                coordinates: $scope.coordinates
+                
+            });
+            console.log($scope.coordinates);
+
         };
 
         $scope.search_button = function(){

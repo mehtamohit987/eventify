@@ -5,7 +5,7 @@
 
     eventify.controller('searchController', function ($scope, $http, $routeParams) {
 
-        var host =  'localhost';
+        var host =  '172.16.65.209'//'localhost';
         var port = '8000';
 		
         $scope.events = []
@@ -20,6 +20,9 @@
         ///////
         $scope.loggedIn=true;
         ///////
+
+
+
         var page = 0, titleQuery = null, selected_time_range = null, date = null, coordinates = null, selected_country= null;
 
 
@@ -52,8 +55,8 @@
                 
 
                 var url = (p==0 ? "http://" + host + ":" + port +"/api/events/?q=" + String(x) + z + y + c : ( p==-1? $scope.prevExists : $scope.nextExists )  )
-
-                // window.location.assign('search');
+                console.log(url)
+                // window.location.assign('#search');
                 $http.get(url)
                     .success(function(data){
                         console.log(data)
