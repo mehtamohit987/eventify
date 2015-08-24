@@ -6,20 +6,28 @@ from Events.serializers import EventSerializer, EventSearchSerializer
 from Events.search_indexes import EventIndex
 from rest_framework_mongoengine import generics as drfme_generics
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
 from datetime import datetime
 from haystack.utils.geo import Point, D as Distance
-# from drf_haystack.viewsets import HaystackViewSet
+from django.conf import settings
+from rest_framework.renderers import JSONRenderer
 
+from django.http import HttpResponse
+# bring in auth in post, put , delete on events
 
-class EventList(generics.ListAPIView): # CreateDestroy
-	# queryset = SearchQuerySet().all()
-	serializer_class = EventSearchSerializer
+class EventList(generics.ListCreateAPIView): # Create
 	paginate_by = 10
+
+	def get_serializer_class(self):
+		if self.request.method == 'GET':
+			return EventSearchSerializer
+		return EventSerializer
+
+
 	def get_queryset(self):
 		D = self.request.GET
 		K = self.request.GET.viewkeys()
@@ -39,85 +47,97 @@ class EventList(generics.ListAPIView): # CreateDestroy
 		if 'latitude' in K and 'longitude' in K:
 		  	latitude = float(D.get('latitude'))
 		  	longitude = float(D.get('longitude'))
-		  	P = Point(longitude, latitude)# (latitude, longitude)
+		  	P = Point(longitude, latitude) 	# (latitude, longitude)
 		  	results = results.dwithin('coordinates', P, Distance(mi=250))
 
-		return results
+	  	if 'sort' in K and D.get('sort')=='true': 
+	  		# use this after flushing db and solr
+	  		# results =  results.order_by('-num_fav')
+	  		pass
+	  		
+  		return results
 
 
-		
-def autocomplete(request):
-	sys = SearchQuerySet().autocomplete(content_auto = request.GET.get('q',''))[:5]
-	suggestions = [results.title for result in sqs]
+  	def perform_create(self, serializer):
+  		serializer.save()
+  		json_data = JSONRenderer().render([serializer.data])
+		# print json_data
+		r = requests.post(
+			settings.HAYSTACK_CONNECTIONS['default']['URL'] + "/update",
+			headers = {	"Content-Type": "application/json",	},
+			data = json_data,
+			)
+		# print r.status_code
+  		
 
-	the_data = {
-		'results': suggestions
-	}
-
-	return HttpResponse(the_data, content_type="application/json")
-
-
-
-
-		# start_offset = int(self.request.GET.get('page',1))-1
-		# end_offset = self.paginate_by+start_offset
-		# results = results[start_offset:end_offset]
-
-		# def post(self, request, *args, **kwargs):
-  #       	return self.create(request, *args, **kwargs)
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		self.perform_create(serializer)
+		headers = self.get_success_headers(serializer.data)
+		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-	""""
-	def post(self, request):
-		add it to db 
-		and http post to solr
-
-	"""
 
 class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	queryset = Event.objects
 	serializer_class = EventSerializer
 
+	def perform_update(self, serializer):
+		serializer.save()
+		# print serializer.data
+		json_data = JSONRenderer().render([serializer.data])
+		print json_data
+		r = requests.post(
+			settings.HAYSTACK_CONNECTIONS['default']['URL'] + "/update",
+			headers = {	"Content-Type": "application/json",	},
+			data = json_data,
+			)
+		print r.status_code
 
-	"""
+	def perform_destroy(self, instance):
+		instance.delete()
+		print str(instance.id)
 
-	custom put and delete
+		x = {}
+		x['delete'] = {'id': str(instance.id)}
+		print x
+		json_data = JSONRenderer().render(x)
+		print json_data
+		r = requests.post(
+			settings.HAYSTACK_CONNECTIONS['default']['URL'] + "/update",
+			headers = {	"Content-Type": "application/json",	},
+			data = json_data,
+			)
+		print r.status_code
 
-	put
-		update request
-		handele to db by serializer
-		post UPDATE too osolr
+	def update(self, request, *args, **kwargs):
+		partial = True
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		self.perform_update(serializer)
+		return Response(serializer.data)
 
-		
-
-
-	delete
-
-		from here and from index
-
-
-	"""
-
-
-
-# class customManager(models.Manager):
-# 	def get_queryset(self):
-# 		return SearchQuerySet().all()
-	
-# class EventSearch(ListAPIView):
-# 	objects= customManager
-			
-
-
-
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		print instance
+		self.perform_destroy(instance)
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
+def autocomplete(request):
+	if request.method == 'GET':
+		sys = SearchQuerySet().autocomplete(title = request.GET.get('q',''))[:5]
+		suggestions = [result.title for result in sys]
+		the_data = {
+			'results': suggestions
+		}
+		json_data = JSONRenderer().render(the_data)
+		print json_data
+		return HttpResponse(the_data, content_type="application/json")
 
-
-# class EventSearch(HaystackViewSet):
-# 	index_models = [Dummy]
-# 	serializer_class = EventSearchSerializer
 
 
 

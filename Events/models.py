@@ -20,14 +20,16 @@ class Event(Document):
 		
 
 	source 				= StringField(choices=['eventbrite', 'eventful'], default='eventbrite', max_length=10)
-	source_server_id	= StringField(max_length=100)
-	image_thumbnail_url = URLField()
-	info_url 			= URLField()
+	source_server_id	= StringField(max_length=100, default='')
+	image_thumbnail_url = StringField(default='')
+	info_url 			= StringField(default='')
 	created 			= DateTimeField(default=datetime.now())
 
 	django_id			= IntField(default=1)
 	django_ct 			= StringField(max_length=13, default='Events.dummy')
 
+
+	num_fav 			= IntField(default=0) 
 
 	meta 				= {
 							'ordering' : ['start_timestamp'],

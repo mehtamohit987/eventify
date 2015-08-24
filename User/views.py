@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from django.contrib.auth import login,logout
-from rest_framework.permissions import IsAuthenticated,AllowAny
+# from rest_framework.permissions import IsAuthenticated,AllowAny
 from mongotoken import MongoToken
 from authentication import MongoAuthentication
 from django.http import Http404
@@ -15,6 +15,7 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsTheSameUser
 import datetime
 from django.utils.timezone import utc
+from Events.views import EventDetail
 
 
 
@@ -24,8 +25,21 @@ class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	lookup_url_kwarg = 'user_id'
 	serializer_class=UserSerializer
 
+	authentication_classes = [MongoAuthentication,]
+	# permission_classes = (IsAuthenticated, )
+	
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=True)
+		serializer.is_valid(raise_exception=True)
+		self.perform_update(serializer)
+		return Response(serializer.data)
+
 class UserList(drfme_generics.ListCreateAPIView):
 	queryset=User.objects.all()
+	
 	lookup_field = 'id'
 	lookup_url_kwarg = 'user_id'
 	serializer_class=UserSerializer
@@ -45,7 +59,7 @@ class ObtainAuthToken(APIView):
 				return Response({'token': None})
 			else:
 
-				token, created = MongoToken.objects.get_or_create(user=user, created__gt= datetime.datetime.utcnow()- datetime.timedelta(hours=24))
+				token, created = MongoToken.objects.get_or_create(user=user, created__gt= datetime.datetime.utcnow() - datetime.timedelta(hours=24))
 				return Response({'token':token.key})
 		else:
 			return Response({'token': None})
@@ -67,6 +81,15 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 			serializer = self.get_serializer(data=data)
 			serializer.is_valid(raise_exception=True)
 			self.perform_create(serializer)
+
+			# to view of POST
+
+			
+
+
+			result = EventsDetail().as_view()(self.request)
+
+
 			headers = self.get_success_headers(serializer.data)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 		else:
@@ -85,13 +108,20 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 
 
 
-class FavouriteDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
+class FavouriteDetail(drfme_generics.RetrieveDestroyAPIView):
 	queryset = UserFavourite.objects.all()
 	serializer_class = UserFavouriteSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'id'
 	authentication_classes = [MongoAuthentication,]
 	permission_classes = (IsTheSameUser, )
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+
+		#to put
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 	# def get_queryset(self):
 	# 	print IsTheSameUser

@@ -15,7 +15,11 @@
         $scope.prevExists = null
         $scope.nextExists = null
         $scope.currentPage = 0;
-        
+
+
+        ///////
+        $scope.loggedIn=true;
+        ///////
         var page = 0, titleQuery = null, selected_time_range = null, date = null, coordinates = null, selected_country= null;
 
 
@@ -27,7 +31,6 @@
             date = args.date;
             coordinates = args.coordinates;
             selected_country = args.selected_country;
-            console.log('sdklvnk')
             renderContent(page)
 
         });
@@ -54,9 +57,15 @@
                 $http.get(url)
                     .success(function(data){
                         console.log(data)
-            			console.log('chu hai kya? hamse bilkul na ho paega')
 
                         $scope.events = data.results;
+
+                        angular.forEach($scope.events, function(ev, key){
+                            ev['is'] = false;
+                            //traverse fav and check which fav-ed
+                            console.log(ev.num_fav)
+                        });
+
                         $scope.prevExists = data['previous'];
                         $scope.nextExists = data['next'];
                         if (data.count == 0)
@@ -91,6 +100,7 @@
             renderContent(-1);
 
             $scope.currentPage --;
+            window.scrollTo(0,0);
             console.log('prev_page')
         };
 
@@ -101,6 +111,7 @@
             // renderDate();
             renderContent(1)
             $scope.currentPage ++;
+            window.scrollTo(0,0);
             console.log('next_page')
         };
 

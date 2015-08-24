@@ -12,6 +12,11 @@
                 <div class = "text-inline"><h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> </div>
                 <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
                 <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
+                <div ng-if="loggedIn">
+                <button ng-if="event.is">Unfavourite</button>
+                <button ng-if="!event.is">Favourite</button>
+                </div>
+                <span>{{event.num_fav==null?'':event.num_fav+' users favourited this.'}}</span>
             </div>
         </div>
     </div>

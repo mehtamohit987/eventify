@@ -24,6 +24,8 @@ class EventIndex(indexes.SearchIndex, indexes.Indexable):
 	django_ct			= indexes.CharField()
 	id 					= indexes.CharField()
 
+	num_fav				= indexes.IntegerField()
+
 	def get_model(self):
 		return Dummy
  	# def index_queryset(self, using=None):

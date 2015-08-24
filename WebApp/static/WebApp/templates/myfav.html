@@ -7,8 +7,11 @@
                 <div class = "text-inline"><h3>{{fav.fav_event.title | limitTo: 14}} </h3><h6>Organized by: {{fav.fav_event.organizer | limitTo: 10}}</h6> </div>
                 <h4>{{fav.fav_event.city  | limitTo: 20}}, {{fav.fav_event.country}}</h6>
                 <h6>{{fav.fav_event.start_timestamp.substring(0,10) + 'at' +  fav.fav_event.start_timestamp.substring(11,19)}}</h6>
+                <div ng-if="loggedIn">
                 <button ng-if="fav.fav_event.is">Unfavourite</button>
                 <button ng-if="!fav.fav_event.is">Favourite</button>
+                </div>
+                <span>{{fav.fav_event.num_fav==null?'':fav.fav_event.num_fav+'users favourited this.'}}</span>
             </div>
         </div>
     </div>

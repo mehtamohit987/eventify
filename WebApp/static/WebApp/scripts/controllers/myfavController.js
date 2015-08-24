@@ -15,9 +15,11 @@
 
         var renderContent = function(p){                
 
-        	x = '55d2b08aef931815214b27ba';
-        	y = '76f875eda90f4cfe9c1b135df7b0aeb708f0c2e7f569';
-
+            /////////
+            $scope.loggedIn=true;
+        	x = '55d9a817ef931843e7b174c4';
+        	y = '282a99fa5f7ee9d79e05c4d644fc10b6ac3ea5660274';
+            ////////
             var url = (p==0 ? "http://" + host + ":" + port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
 
             var req = {
@@ -32,6 +34,7 @@
                 .then(function(data){
                     console.log(data)
                     $scope.favs = data.data.results;
+                    console.log(data.data.results);
 
                     angular.forEach($scope.favs, function(fav, key){
                     	fav.fav_event['is'] = true;

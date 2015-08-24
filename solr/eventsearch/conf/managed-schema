@@ -141,24 +141,36 @@
       <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
   </fieldType>
+
+  <fieldType name="edgytext" class="solr.TextField" positionIncrementGap="100">
+
+ <analyzer type="index">
+
+   <tokenizer class="solr.KeywordTokenizerFactory"/>
+
+   <filter class="solr.LowerCaseFilterFactory"/>
+
+   <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="25" />
+
+ </analyzer>
+
+ <analyzer type="query">
+
+   <tokenizer class="solr.KeywordTokenizerFactory"/>
+
+   <filter class="solr.LowerCaseFilterFactory"/>
+
+ </analyzer>
+
+</fieldType>
+
   <fieldType name="text_en_splitting" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
     <analyzer type="index">
-      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
-      <filter class="solr.WordDelimiterFilterFactory" generateNumberParts="1" splitOnCaseChange="1" catenateWords="1" generateWordParts="1" catenateAll="0" catenateNumbers="1"/>
-      <filter class="solr.LowerCaseFilterFactory"/>
-      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
-      <filter class="solr.PorterStemFilterFactory"/>
-    </analyzer>
+      <tokenizer class="solr.EdgeNGramTokenizerFactory" minGramSize="2" maxGramSize="10"/>
+      </analyzer>
     <analyzer type="query">
-      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-      <filter class="solr.SynonymFilterFactory" expand="true" synonyms="synonyms.txt" ignoreCase="true"/>
-      <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
-      <filter class="solr.WordDelimiterFilterFactory" generateNumberParts="1" splitOnCaseChange="1" catenateWords="0" generateWordParts="1" catenateAll="0" catenateNumbers="0"/>
-      <filter class="solr.LowerCaseFilterFactory"/>
-      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
-      <filter class="solr.PorterStemFilterFactory"/>
-    </analyzer>
+      <tokenizer class="solr.EdgeNGramTokenizerFactory" minGramSize="2" maxGramSize="10"/>
+      </analyzer>
   </fieldType>
   <fieldType name="text_en_splitting_tight" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
     <analyzer>
@@ -400,22 +412,23 @@
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="long" indexed="true" stored="true"/>
   <field name="address" type="text_general" multiValued="false" indexed="true" stored="true"/>
-  <field name="city" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <field name="city" type="edgytext" multiValued="false" indexed="true" stored="true"/>
   <field name="coordinates" type="location_rpt" indexed="true" stored="true"/>
   <field name="country" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
   <field name="django_ct" type="string" indexed="true" stored="true" multiValued="false"/>
   <field name="django_id" type="int" indexed="true" stored="true" multiValued="false"/>
 
-  <field name="end_timestamp" type="date" indexed="true" required="true" stored="true"/>
-  <field name="event_category" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <field name="end_timestamp" type="date" indexed="true" stored="true"/>
+  <field name="event_category" type="edgytext" multiValued="false" indexed="true" stored="true"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="image_thumbnail_url" type="strings"  multiValued="false"/>
   <field name="info_url" type="strings"  multiValued="false"/>
+  <field name="num_fav" type="int" multiValued="false" indexed="true" stored="true"/>
   <field name="organizer" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="postal_code" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="start_timestamp" type="date" indexed="true" required="true" stored="true"/>
-  <field name="title" type="text_general" indexed="true" required="true" stored="true"  multiValued="false"/>
+  <field name="title" type="edgytext" indexed="true" required="true" stored="true"  multiValued="false"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
