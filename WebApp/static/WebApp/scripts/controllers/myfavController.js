@@ -11,15 +11,45 @@
         $scope.currentPage = 0;
         $scope.prevExists = null;
         $scope.nextExists = null;
-        $scope.favs = null
+        $scope.favs = null;
+
+
+        var u_id = null;
+        $scope.$on('authDetails',function(event, args){
+            $scope.loggedIn = args.loggedIn;
+            console.log(args.user_id);
+            u_id = args.user_id;
+            $scope.authToken = args.authToken;
+
+        });
+
+        console.log(u_id);
 
         var renderContent = function(p){                
 
-            /////////
-            $scope.loggedIn=true;
-        	x = '55d9a817ef931843e7b174c4';
-        	y = '282a99fa5f7ee9d79e05c4d644fc10b6ac3ea5660274';
-            ////////
+            
+
+         //    /////////
+         //    $scope.loggedIn=true;
+        	// x = '55d9a817ef931843e7b174c4';
+        	// y = '282a99fa5f7ee9d79e05c4d644fc10b6ac3ea5660274';
+         //    ////////
+
+
+            
+         //    AuthToken.get_user_id();
+         //    AuthToken.generate_token();
+         //    $scope.loggedIn = AuthToken.loggedIn;
+         //    x = AuthToken.user_id;
+         //    y = AuthToken.authToken;
+
+            
+
+            x = $scope.user_id;
+            y = $scope.authToken;
+
+
+
             var url = (p==0 ? "http://" + host + ":" + port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
 
             var req = {
@@ -64,8 +94,6 @@
 
 
 
-
-
         $scope.prevPage = function($event){
 
 			renderContent(-1);
@@ -86,10 +114,6 @@
 
 
         renderContent(0);
-
-
-
-
 
       }]);
 

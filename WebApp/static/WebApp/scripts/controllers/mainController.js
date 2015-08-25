@@ -3,7 +3,7 @@
 
     var eventify = angular.module("eventify");
 
-    eventify.controller('mainController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    eventify.controller('mainController', ['$scope', '$http', '$location', 'AuthToken', function ($scope, $http, $location, AuthToken) {
 
         var host =  '172.16.65.209'; //'localhost';//
         var port = '8000';
@@ -25,17 +25,25 @@
         $scope.authToken = null
         $scope.user_id = null
 
+// ///////
+//         var authT = AuthToken.user_id
+//         console.log(authT)
+// ///////
+
+
 
         var search_button_pressed = false;
 
         if ($scope.authToken == null && typeof(Storage) != "undefined" && localStorage.hasOwnProperty('authToken')) {
             $scope.authToken = localStorage.getItem("authToken");
             $scope.loggedIn = true;
-            if(localStorage.hasOwnProperty('user_id'))
-                $scope.user_id = localStorage.getItem("authToken");
+            if(localStorage.hasOwnProperty('id'))
+                // console.log('hahahh')
+                $scope.user_id = localStorage.getItem("id");
         }
 
-
+        console.log($scope.user_id)
+        console.log($scope.authToken)
 
         var roundit = function(x,y){
             return Math.round(x*Math.pow(10,y)) / Math.pow(10,y);
@@ -131,42 +139,74 @@
             if(x!=null&&x!=''&&x!=' '&& y!=null&&y!=''&&y!=' ')
             {       
                 
+                AuthToken.generate_token(x,y)
+                if (AuthToken.get_token() != null)
+                {
+                  $(function () {
+                       $('.close').trigger("click");
+                    });
+                }
+                else{
+                   $(function () {
+                       $('#login_fail').show();
+                     });
+               
+                }
 
-                var url = "http://" + host + ":" + port +"/api/user/auth-token/?email=" + String(x) + "&password=" + String(y);
+        
 
-                $http.get(url)
-                    .success(function(data){
-                        if('token' in data && data['token']!= null){
-                            $scope.loggedIn=true;
-                            $scope.authToken= String(data['token']);
+                // var url = "http://" + host + ":" + port +"/api/user/auth-token/?email=" + String(x) + "&password=" + String(y);
+
+                // $http.get(url)
+                //     .success(function(data){
+                //         if('token' in data && data['token']!= null){
+                //             $scope.loggedIn=true;
+                //             $scope.authToken= String(data['token']);
 
 
-                            if (typeof(Storage) != "undefined") {
-                                localStorage.setItem("authToken", $scope.authToken);
-                            }
+                //             if (typeof(Storage) != "undefined") {
+                //                 localStorage.setItem("authToken", $scope.authToken);
+                //             }
 
-                            $(function () {
-                                $('.close').trigger("click");
-                              });
+                //             AuthToken.
 
-                        }
-                        else{
-                            console.log("error");
-                            $scope.loggedIn=false;
-                            $scope.authToken = null;
-                        }
+
+
+
+
+                //             $(function () {
+                //                    $('.close').trigger("click");
+                //                  });
+                   
+
+                //         }
+                //         else{
+                //             console.log("error");
+                //             $scope.loggedIn=false;
+                //             $scope.authToken = null;
+                //         }
                                     
-                })  
-                .error(function(data){
-                    $scope.loggedIn=false;
-                    $scope.authToken = null;
-                });
+                // })  
+                // .error(function(data){
+                //     $scope.loggedIn=false;
+                //     $scope.authToken = null;
+                // });
+
+
+                 
             }
-
-
 
         };
 
+
+        console.log($scope.user_id)
+        $scope.$root.$broadcast("authDetails",{
+
+            loggedIn: $scope.loggedIn,
+            user_id: $scope.user_id,
+            authToken: $scope.authToken,
+        });
+        console.log($scope.user_id);
 
         $scope.register_button = function(){
 
