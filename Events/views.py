@@ -18,6 +18,8 @@ from django.conf import settings
 from rest_framework.renderers import JSONRenderer
 
 from django.http import HttpResponse
+
+from Events.tasks import reload_celery
 # bring in auth in post, put , delete on events
 
 class EventList(generics.ListCreateAPIView): # Create
@@ -67,6 +69,8 @@ class EventList(generics.ListCreateAPIView): # Create
 			headers = {	"Content-Type": "application/json",	},
 			data = json_data,
 			)
+		reload_celery.delay()
+
 		# print r.status_code
   		
 
@@ -94,6 +98,7 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 			data = json_data,
 			)
 		print r.status_code
+		reload_celery.delay()
 
 	def perform_destroy(self, instance):
 		instance.delete()
@@ -110,9 +115,10 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 			data = json_data,
 			)
 		print r.status_code
+		reload_celery.delay()
 
 	def update(self, request, *args, **kwargs):
-		partial = True
+		partial = kwargs.pop('partial', False)
 		instance = self.get_object()
 		serializer = self.get_serializer(instance, data=request.data, partial=partial)
 		serializer.is_valid(raise_exception=True)

@@ -5,14 +5,18 @@ from mongoengine import *
 from datetime import datetime
 from rest_framework.renderers import JSONRenderer
 from django.conf import settings
+from Events.tasks import reload_celery
 
 # connect('eventify', host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
 
 
-start = 18
-start_date = '2015-08-'+str(start)+'T00:00:00Z'
-end_date = '2015-08-'+str(start+1)+'T00:00:00Z'
-# future : automated do by current timestamp + 10 days after date crawl
+try:
+	print start_date, end_date
+except NameError:
+	start = 18
+	start_date = '2015-08-'+str(start)+'T00:00:00Z'
+	end_date = '2015-08-'+str(start+1)+'T00:00:00Z'
+	print start_date, end_date
 
 count = 0
 count_saved = 0
@@ -117,8 +121,7 @@ for page_num in xrange(1,7):
 							)
 
 					Q = Event.objects(title=E.title, start_timestamp=E.start_timestamp, coordinates=E.coordinates)
-					
-					#print Q
+
 					if len(Q) == 0:
 						E.save()
 						count_saved+=1
@@ -126,37 +129,17 @@ for page_num in xrange(1,7):
 						P = Event.objects(title=E.title, start_timestamp=E.start_timestamp, coordinates=E.coordinates)
 						print P
 						if len(P) > 0 :
-							#print P[0]
-
-							# fields 	= ('id', 'title', 'start_timestamp', 'end_timestamp', 'description', 'organizer', 'event_category', 'address', 'city', 'country', 'postal_code', 'coordinates', 'image_thumbnail_url', 'info_url')
-							# D = {}
-							# ser = EventSerializer(P[0]).data
-
-							# for x in fields:
-							# 	if x in ser  and ser[x]!=None:
-							# 		D[x]=ser[x]
-							
-							# # D['django_id'] = D['id']
-							# # D['django_ct'] = 'Events.dummy'
-							
-							# json_data = JSONRenderer().render([D])
-
-							json_data = JSONRenderer().render(EventSerializer([P[0]], many=True).data) # E.data
-							# print json_data, type(json_data)
-
+							json_data = JSONRenderer().render(EventSerializer([P[0]], many=True).data)
 							post_url_header = {
 								"Content-Type": "application/json",
 							}
-
 							r = requests.post(
 								settings.HAYSTACK_CONNECTIONS['default']['URL'] + "/update",
 								headers = post_url_header,
 								data = json_data,
 								)
-
-
-							print r.status_code
-
+							if r.status_code != 200: print "post failure"
+							
 
 					else:
 						count_skipped+=1
@@ -167,3 +150,6 @@ for page_num in xrange(1,7):
 
 	else:
 		print "get list failed"
+
+
+reload_celery.delay()

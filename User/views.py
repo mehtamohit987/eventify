@@ -33,7 +33,7 @@ class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	def update(self, request, *args, **kwargs):
 		partial = kwargs.pop('partial', False)
 		instance = self.get_object()
-		serializer = self.get_serializer(instance, data=request.data, partial=True)
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
 		serializer.is_valid(raise_exception=True)
 		self.perform_update(serializer)
 		return Response(serializer.data)
@@ -87,7 +87,7 @@ class FavouriteList(drfme_generics.ListCreateAPIView):
 			n = json.loads(r.text)['num_fav']
 			x = {'num_fav': n+1}
 			json_data = JSONRenderer().render(x)
-			r = requests.put(
+			r = requests.patch(
 				'http://localhost:8000/api/events/' + request.data['fav_event'] + '/',
 				headers = {	"Content-Type": "application/json",	},
 				data = json_data,
@@ -127,7 +127,7 @@ class FavouriteDetail(drfme_generics.RetrieveDestroyAPIView):
 		n = json.loads(r.text)['num_fav']
 		x = {'num_fav': n-1}
 		json_data = JSONRenderer().render(x)
-		r = requests.put(
+		r = requests.patch(
 			'http://localhost:8000/api/events/' + request.data['fav_event'] + '/',
 			headers = {	"Content-Type": "application/json",	},
 			data = json_data,

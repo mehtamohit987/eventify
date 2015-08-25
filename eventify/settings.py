@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# from __future__ import absolute_import
+from __future__ import absolute_import
 import os
 import djcelery
 from mongoengine import connect
+from datetime import timedelta
+from celery.schedules import crontab
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -118,15 +123,38 @@ BROKER_URL = 'django://'
 connect('eventify')#, host='127.0.0.1', port=27017, username="eventifyUser", password="eventifyPassword")
 
 
-haystack_url = 'localhost'
-haystack_core = 'eventsearch'#'eventauto'#'eventsearch'
+HAYSTACK_URL = 'localhost'
+HAYSTACK_CORE = 'eventsearch'#'eventauto'#'eventsearch'
 
 
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'package_override.solr_backend_override.CustomSolrEngine', # 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://' + haystack_url + ':8983' +'/solr/'+ haystack_core
+        'URL': 'http://' + HAYSTACK_URL + ':8983' +'/solr/'+ HAYSTACK_CORE
         # ...or for multicore...
         # 'URL': 'http://127.0.0.1:8983/solr/mysite',
     },
 }
+
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+CELERYBEAT_SCHEDULE = {
+    'crawl-eventBriteAPI-everyDay': {
+        'task': 'Events.tasks.get_eventbrite',
+        'schedule': timedelta(days=1) #crontab(hour=6, minute=0)
+    },
+    'crawl-eventFulAPI-everyDay': {
+        'task': 'Events.tasks.get_eventful',
+        'schedule': timedelta(days=1) #crontab(hour=6, minute=0)
+    },
+    # 'send-mails': {
+    #     'task': 'User.tasks.',
+    #     'schedule': timedelta(days=1)
+    # },
+
+}
+
+CELERY_TIMEZONE = 'UTC'
+
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'

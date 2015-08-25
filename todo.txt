@@ -6,6 +6,9 @@ fav					=		DONE
 	- top fav events							/	
 	- top nearby fav events						/
 	- fav/unfav view put delete events count	/
+
+	- user fav array api
+
 auto-complete:
 	- backend done				/
 	- test on f.end.			/
@@ -13,13 +16,16 @@ auto-complete:
 
 
 automation:
-	- eventbrite
-	- eventful
+	- eventbrite				/
+	- eventful					/
+	- solr update				/		
+	- cron						/
 	- email scheduling
-	- solr update
-
-Front end:
 	
+
+Front end:	
+	- change to PATCH req
+
 	ON SUNDAY:
 	- auth token refresh mechanism	= local storage timestamp saving and before and server req check validity of saved key
 	- logged in state and parameters in a service
@@ -34,7 +40,7 @@ Front end:
 	- autocomplete implementation
 	- calendar picker
 	- profile edit menu
-
+	- mohit - angular csrf
 
 
 testing:
@@ -43,6 +49,9 @@ testing:
 	- views related to permissions appropriately
 	- views related to post appropriately
 
+
+
+----------------------------
 restrictions/permissions on:
 	- user profile view allow to other logged in user
 	- user fav view allow to other logged in user
