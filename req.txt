@@ -1,3 +1,5 @@
+You are using pip version 7.1.0, however version 7.1.2 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
 amqp==1.4.6
 anyjson==0.3.3
 billiard==3.3.0.20
