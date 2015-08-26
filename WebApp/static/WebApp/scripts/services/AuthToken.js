@@ -131,8 +131,8 @@ angular.module('eventify')
                 service.authToken = null;
                 service.validity = null;
                 service.user_id = null;
-                $rootScope.$broadcast.("logOut");
-            }
+                $rootScope.$broadcast("logOut");
+            };
 
             service.set_local_storage = function(){
 
@@ -197,7 +197,34 @@ angular.module('eventify')
             };
       
 
-            service.get_user_id = function(){return service.user_id;};
+            service.generate_user_id = function(){
+                var url_id = "http://" + service.host + ":" + service.port +"/api/user/getuserid";
+                var req = {
+                method: 'GET',
+                 url: url_id,
+                 headers: {
+                   'Authorization': 'Token ' + String(service.authToken)
+                 }
+                }
+
+                $http(req)
+                    .then(function(data){
+                        console.log(data)
+                        service.user_id = data.data.results;
+                        service.set_local_storage();     
+                    }
+                    ,
+                    function(data){
+                        console.log('id na ho pai')
+                    }
+                );
+            };
+            
+            service.get_user_id = function(){
+                if(service.user_id==null)
+                    generate_user_id();
+                return service.user_id;
+            };
 
             service.get_fav_event_list = function(){
                 if(service.fav_events==null)

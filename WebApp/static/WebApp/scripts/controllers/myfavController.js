@@ -68,24 +68,72 @@
 
 
 
+        $scope.favourite = function($index, id){
 
+            if (id == null || $scope.loggedIn==false) return;
+            var user_id = AuthToken.get_user_id();
+            var authToken = AuthToken.get_token();
+            if (user_id==null||authToken==null)return;
+
+            var fav_url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(user_id) + "/favourite/";
+            var req = {
+             method: 'POST',
+             url: fav_url,
+             headers: {
+               'Authorization': 'Token ' + String(authToken)
+             },
+             data: {fav_event: id} 
+            }
+
+            $http(req)
+                .then(function(data){
+                    $scope.favs[$index].fav_event['is'] = true;
+                    $scope.favs[$index].fav_event['num_fav']++;
+                }
+                ,
+                function(data){
+                    console.log("error");
+                }
+            );   
+
+        };
+        
+        $scope.unfavourite= function($index, id){
+
+            if (id == null || $scope.loggedIn==false) return;
+            var user_id = AuthToken.get_user_id();
+            var authToken = AuthToken.get_token();
+            if (user_id==null||authToken==null)return;
+
+            var fav_url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(user_id) + "/favourite/" + String(id);
+            var req = {
+             method: 'DELETE',
+             url: fav_url,
+             headers: {
+               'Authorization': 'Token ' + String(authToken)
+             }
+            }
+            $scope.favs[$index].fav_event['is'] = false;
+            $scope.favs[$index].fav_event['num_fav']--;
+
+            $http(req);
+
+        };
 
         $scope.prevPage = function($event){
 
 			renderContent(-1);
-
             $scope.currentPage --;
-            console.log('prev_page')
+            window.scrollTo(0,0);
         };
 
 
 
         $scope.nextPage = function($event){
 
-            // renderDate();
             renderContent(1)
             $scope.currentPage ++;
-            console.log('next_page')
+            window.scrollTo(0,0);
         };
 
 

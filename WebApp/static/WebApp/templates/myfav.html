@@ -10,11 +10,12 @@
                 <h6>{{fav.fav_event.start_timestamp.substring(0,10) + 'at' +  fav.fav_event.start_timestamp.substring(11,19)}}</h6>
 
                 <div ng-if="loggedIn" class="col-lg-4">
-                    <button class = "btn btn-default" ng-if="fav.fav_event.is" ng-click="unfavorite(event.id)">Unfavourite</button>
-                    <button class = "btn btn-primary" ng-if="!fav.fav_event.is" ng-click="favorite(event.id)">Favourite</button>
+                    <button class = "btn btn-default" ng-if="fav.fav_event.is" ng-click="unfavourite($index, fav.id)">Unfavourite</button>
+                    <button class = "btn btn-primary" ng-if="!fav.fav_event.is" ng-click="favourite($index, fav.fav_event.id)">Favourite</button>
                 </div>
 
-                <span>{{fav.fav_event.num_fav==null?'':fav.fav_event.num_fav+'users favourited this.'}}</span>
+                <span style="float:right;margin-right:23%;">{{fav.fav_event.num_fav==null?'':fav.fav_event.num_fav+' users favourited this.'}}</span>
+                <span>{{fav.id}}   -   {{fav.fav_event.id}}</span>
             </div>
         </div>
     </div>
@@ -42,7 +43,7 @@
     </div>
   </div>
 
-<div class="jumbotron" ng-if="(prevExists || nextExists)" style="margin-left:25px;">
+<div class="jumbotron" ng-if="(prevExists || nextExists)" style="margin-left:17%;">
     <ul class="pager">
         <li class="previous" ng-click="prevPage()" ng-if="prevExists">
         <a>Previous</a>
