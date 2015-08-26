@@ -7,6 +7,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from django.contrib.auth import login,logout
 # from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from mongotoken import MongoToken
 from authentication import MongoAuthentication
 from django.http import Http404
@@ -18,6 +19,7 @@ from django.utils.timezone import utc
 from Events.views import EventDetail
 import requests
 import json
+from django.http import HttpResponse
 
 
 class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
@@ -133,6 +135,45 @@ class FavouriteDetail(drfme_generics.RetrieveDestroyAPIView):
 			data = json_data,
 			)
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+@api_view(['GET'])
+@authentication_classes((MongoAuthentication,))
+@permission_classes((IsTheSameUser,))
+def favouritearraylist(request, user_id):
+	if User.objects(id__iexact=user_id).count() == 0:
+		return HttpResponse(status=404)
+
+	if request.auth != None and request.user != None and str(request.user.id) != user_id:
+			return Response(status=status.HTTP_403_FORBIDDEN)
+	
+	favList = []
+
+	for fav in UserFavourite.objects():
+		if str(fav.user.id) == user_id:
+			favList.append(str(fav.fav_event.id))
+	
+
+	the_data = {
+		'results': favList
+	}
+	json_data = JSONRenderer().render(the_data)
+	return HttpResponse(json_data, content_type="application/json")
+
+
+
+@api_view(['GET'])
+@authentication_classes((MongoAuthentication,))
+@permission_classes((IsTheSameUser,))
+def getuserid(request):
+	the_data = {
+		'results': str(request.user.id)
+	}
+	json_data = JSONRenderer().render(the_data)
+	return HttpResponse(json_data, content_type="application/json")
+
 
 	# def get_queryset(self):
 	# 	print IsTheSameUser

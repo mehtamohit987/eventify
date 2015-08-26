@@ -142,16 +142,16 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERYBEAT_SCHEDULE = {
     'crawl-eventBriteAPI-everyDay': {
         'task': 'Events.tasks.get_eventbrite',
-        'schedule': timedelta(days=1) #crontab(hour=6, minute=0)
+        'schedule': crontab(hour=6, minute=0)
     },
     'crawl-eventFulAPI-everyDay': {
         'task': 'Events.tasks.get_eventful',
-        'schedule': timedelta(days=1) #crontab(hour=6, minute=0)
+        'schedule': crontab(hour=6, minute=30)
     },
-    # 'send-mails': {
-    #     'task': 'User.tasks.',
-    #     'schedule': timedelta(days=1)
-    # },
+    'send-mails': {
+        'task': 'User.tasks.send_todays_event_mails',
+        'schedule': crontab(hour=7, minute=0)
+    },
 
 }
 
