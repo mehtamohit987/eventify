@@ -131,6 +131,7 @@ angular.module('eventify')
                 service.authToken = null;
                 service.validity = null;
                 service.user_id = null;
+                $rootScope.$broadcast.("logOut");
             }
 
             service.set_local_storage = function(){

@@ -18,7 +18,9 @@
         $scope.$on('authSuccess',function(event){
             $scope.loggedIn = true;
         });
-
+        $scope.$on('logOut', function(event){
+            $scope.loggedIn = false;
+        });
 
 
         var renderContent = function(p){                
