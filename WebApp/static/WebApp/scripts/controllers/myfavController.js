@@ -3,24 +3,30 @@
 
     var eventify = angular.module("eventify");
 
-    eventify.controller('myfavController', ['$scope', '$http', function ($scope, $http) {
-
-        var host =  'localhost';
-        var port = '8000';
+    eventify.controller('myfavController', ['$scope', '$http', 'AuthToken', function ($scope, $http, AuthToken) {
 
         $scope.currentPage = 0;
-        $scope.prevExists = null;
+        $scope.prevExists = null; 
         $scope.nextExists = null;
-        $scope.favs = null
+        $scope.favs = null;
+
+
+        $scope.loggedIn = false;        
+        if ( AuthToken.get_token() != null){
+            $scope.loggedIn = true; 
+        }
+        $scope.$on('authSuccess',function(event){
+            $scope.loggedIn = true;
+        });
+
+
 
         var renderContent = function(p){                
 
-            /////////
-            $scope.loggedIn=true;
-        	x = '55d9a817ef931843e7b174c4';
-        	y = '282a99fa5f7ee9d79e05c4d644fc10b6ac3ea5660274';
-            ////////
-            var url = (p==0 ? "http://" + host + ":" + port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
+        	x = AuthToken.get_user_id();
+        	y = AuthToken.get_token();
+            
+            var url = (p==0 ? "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
 
             var req = {
 			 method: 'GET',
@@ -32,17 +38,14 @@
 
             $http(req)
                 .then(function(data){
-                    console.log(data)
                     $scope.favs = data.data.results;
-                    console.log(data.data.results);
 
                     angular.forEach($scope.favs, function(fav, key){
                     	fav.fav_event['is'] = true;
-                    	console.log(fav);
                     });
 
-                    $scope.prevExists = data['previous'];
-                    $scope.nextExists = data['next'];
+                    $scope.prevExists = data.data['previous'];
+                    $scope.nextExists = data.data['next'];
                     if (data.count == 0)
                     { $scope.currentPage = 0; }
                     else 
@@ -57,7 +60,6 @@
                     $scope.events = null;
                     $scope.prevExists = null;
                     $scope.nextExists = null;
-                    
                 }
                 );
         }

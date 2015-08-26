@@ -13,18 +13,18 @@
 	            controller: 'homeController'
 
 	        }).
-	        when('/search',{
+	//         when('/search',{
 
-	            templateUrl: '/static/WebApp/templates/search.html',
-	            controller: 'searchController'
+	//             templateUrl: '/static/WebApp/templates/search.html',
+	//             controller: 'searchController'
 
-	        }).
-	        when('/myprofile',{
+	//         }).
+	//         when('/myprofile',{
 
-	            templateUrl: '/static/WebApp/templates/myprofile.html',
-	            controller: 'myprofileController'
+	//             templateUrl: '/static/WebApp/templates/myprofile.html',
+	//             controller: 'myprofileController'
 
-	        }).
+	//         }).
 	        when('/myfav',{
 
 	            templateUrl: '/static/WebApp/templates/myfav.html',
