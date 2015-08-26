@@ -6,7 +6,7 @@
     eventify.controller('myfavController', ['$scope', '$http', function ($scope, $http) {
 
         var host =  'localhost';
-        var port = '8000';
+        var port = '9000';
 
         $scope.currentPage = 0;
         $scope.prevExists = null;
@@ -17,8 +17,8 @@
 
             /////////
             $scope.loggedIn=true;
-        	x = '55d9a817ef931843e7b174c4';
-        	y = '282a99fa5f7ee9d79e05c4d644fc10b6ac3ea5660274';
+        	x = '55dcd3123472f91d8fa64d90';
+        	y = '768402f8c74dbccdb61fd1d917926edc6d4a6c77ca1f';
             ////////
             var url = (p==0 ? "http://" + host + ":" + port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
 

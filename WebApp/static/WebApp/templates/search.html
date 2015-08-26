@@ -1,9 +1,10 @@
  <div style="margin-left:20px;">
 
-  <div ng-if = "searching" class="alert alert-dismissable alert-success">
+  <div ng-if = "searching" class="alert alert-dismissable alert-success" ng-click = "search_button()">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p>Number of Results found:  {{ numFound }} </p>
   </div>
+  <!-- <p>title{{titleQuery}}, {{page}}</p> -->
 
 <div class="event" ng-repeat="event in events">
     <div class="row">
@@ -37,7 +38,7 @@
 
 
             <p style="font-size:12px;">{{event.description | limitTo: 500}} 
-            <a ng-href={{event.info_url}}>...(continue reading)...<a>
+            <a ng-href={{event.info_url}}>...(continue reading)...</a>
             </p>
             <p style="font-size:12px;">Address: {{event.address | limitTo: 50}}</p>
             
@@ -52,7 +53,7 @@
 <a>Previous</a>
 </li>
 
-<p style="text-align:center;">Page No. : {{currentPage}}</p>
+<span style="text-align:center;">Page No. : {{currentPage}}</span>
 <li class="next" ng-click="nextPage()" ng-if="nextExists">
 <a>Next</a>
 </li>
