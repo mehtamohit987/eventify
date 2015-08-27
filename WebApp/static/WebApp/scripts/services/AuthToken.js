@@ -21,20 +21,18 @@ angular.module('eventify')
                 if(x!=null&&x!=''&&x!=' '&& y!=null&&y!=''&&y!=' ')
                 {       
                     
-                    console.log(service.loggedIn);
+                    
                     var url = "http://" + service.host + ":" + service.port +"/api/user/auth-token/?email=" + String(x) + "&password=" + String(y);
 
                     $http.get(url)
                         .success(function(data){
-                            console.log(url)
+                            
                             if('token' in data && data['token']!= null){
 
                                 service.loggedIn=true;
                                 service.authToken= String(data['token']);
                                 service.validity =  (new Date( ( new Date() ).getTime() + (24*60*60*1000) )).getTime() ;
-                                console.log(service.authToken);
-                                console.log(service.validity);
-
+                                
                                 var url_id = "http://" + service.host + ":" + service.port +"/api/user/getuserid";
                                 var req = {
                                 method: 'GET',
@@ -46,13 +44,12 @@ angular.module('eventify')
 
                                 $http(req)
                                     .then(function(data){
-                                        console.log(data)
                                         service.user_id = data.data.results;
                                         service.set_local_storage();     
                                     }
                                     ,
                                     function(data){
-                                        console.log('id na ho pai')
+                                        console.log("Couldn't get user id")
                                     }
                                     );
 
@@ -78,7 +75,6 @@ angular.module('eventify')
                     });
                 }
 
-                console.log('ab yahaan');
 
             };
 
@@ -99,7 +95,6 @@ angular.module('eventify')
                 if (typeof(Storage) != "undefined" && localStorage.hasOwnProperty('authToken') && localStorage.hasOwnProperty('validity')) {
                     
                     var valid = parseInt(localStorage.getItem("validity"));
-                    console.log(valid);
 
                     if( valid > (new Date()).getTime() ){
                         
@@ -112,8 +107,6 @@ angular.module('eventify')
                         return true;
                     }
                     else{
-                        console.log(valid);
-                        console.log(new Date());
                         service.unset_local_storage();
                     }
 
@@ -165,9 +158,6 @@ angular.module('eventify')
             service.generate_fav_event_list = function(){
 
                 if (service.user_id== null || service.user_id == '' || service.authToken==null || service.authToken=='') {fav_events=null; return;}
-
-                console.log('main tahan');
-
                                 
                 var url = "http://" + service.host + ":" + service.port +"/api/user/" + String(service.user_id) + "/favouritearraylist";
                 var req = {
@@ -180,14 +170,12 @@ angular.module('eventify')
 
                 $http(req)
                     .then(function(data){
-                        // console.log(data)
-                        service.fav_events = data.data.results;        
-                        console.log(service.fav_events);
+                        service.fav_events = data.data.results;
                         $rootScope.$broadcast("favListGenerated");
                     }
                     ,
                     function(data){
-                        console.log('fav ni mila');
+                        console.log("Couldn't retrieve user favourites fromm api");
                         service.fav_events=null;
                     }
                     );
@@ -212,13 +200,12 @@ angular.module('eventify')
 
                 $http(req)
                     .then(function(data){
-                        console.log(data)
                         service.user_id = data.data.results;
                         service.set_local_storage();     
                     }
                     ,
                     function(data){
-                        console.log('id na ho pai')
+                        console.log("Couldn't get user id of current user");
                     }
                 );
             };
@@ -234,8 +221,6 @@ angular.module('eventify')
                     service.generate_fav_event_list();
                 
                 if(service.fav_events!=null){
-                    console.log('here');
-                    console.log(service.fav_events);
                     return service.fav_events;
 
                 }

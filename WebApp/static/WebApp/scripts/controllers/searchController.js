@@ -86,7 +86,7 @@
                 
 
                 var url = (p==0 ? "http://" + AuthToken.host + ":" + AuthToken.port +"/api/events/?q=" + String(x) + z + y + c : ( p==-1? $scope.prevExists : $scope.nextExists )  )
-                console.log(url);
+                
                 $http.get(url)
                     .success(function(data){
 
@@ -96,7 +96,6 @@
                             data.results[i]['fav_id'] = null;
                         }
 
-                        console.log(data.results);
 
                         $scope.events = data.results;
                         $scope.fav_events_of_user = AuthToken.get_fav_event_list();

@@ -1,14 +1,19 @@
 <div style="margin-left:10%;">
-<h2> Most Favourited Events </h2>
+<h2> Top Most Favourited Events </h2>
   <div class="event" ng-repeat="event in events">
     <div class="row">
             <div class="page-header row">           
                 <div class="col-lg-8" style ="margin-top: 20px;">
                     <h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6>    
                 </div>
-                
+                <div ng-if="loggedIn" class="col-lg-4">
+                    <button class = "btn btn-default" ng-if="event.is" ng-click="unfavourite($index, event.fav_id)">Unfavourite</button>
+                    <button class = "btn btn-primary" ng-if="!event.is" ng-click="favourite($index, event.id)">Favourite</button>
+                </div> 
+                <span>{{event.num_fav==null?'':event.num_fav+' users favourited this.'}}</span>
+
                 <div class="col-lg-12">
-                    <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
+                    <h4>{{event.city | limitTo: 20}}, {{event.country}}</h6>
                     <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
                 </div>
 
