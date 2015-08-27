@@ -14,6 +14,7 @@
         $scope.options = [];
         $scope.coordinates = null;
         $scope.disableSearch = true;
+        $scope.autocompletelist = [];
 
 
         $scope.registered = false
@@ -30,8 +31,6 @@
         $scope.$on('logOut', function(event){
             $scope.loggedIn = false;
         });
-
-
 
 
         var search_button_pressed = false;
@@ -61,8 +60,10 @@
 
 
         $scope.queryChanged = function() {
+
             if($scope.titleQuery==null||$scope.titleQuery==''){
                 $scope.disableSearch = true;
+                return;
             }
             else if(search_button_pressed){
                 search_button_pressed = false;
@@ -72,6 +73,20 @@
                 $scope.disableSearch=false;
                 $location.url('/search');
             }
+
+
+            var url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/events/autocomplete?q=" + String($scope.titleQuery);
+
+            $http.get(url)
+                .success(function(data){
+                    $scope.autocompletelist = data.results.slice(0,5);        
+                    console.log($scope.autocompletelist);
+                })
+                .error(function(data){
+                    $scope.autocompletelist = [];
+                });
+
+
 
         };
 
@@ -105,6 +120,10 @@
 
         };
 
+
+        document.getElementById("titleQueryBox").addEventListener("click", $scope.queryChanged);
+
+
         $scope.lmodel = {};
         $scope.rmodel = {};
 
@@ -114,10 +133,10 @@
             AuthToken.unsetEverything();
         }
 
-        $scope.login_button = function(){
+        $scope.login_button = function(md5pass){
             x = $scope.lmodel.email;
             y = $scope.lmodel.password;
-
+            // y = CryptoJS.MD5( $scope.lmodel.password ) ;
             AuthToken.generate_token(x,y);
         };
 
@@ -142,7 +161,7 @@
                             (function ($) {
                                 $('.close').trigger("click");
                               })(jQuery);
-                            window.setInterval(function(){$scope.registered=false;}, 2000);
+                            window.setInterval(function(){$scope.registered=false;}, 500);
                         }
                         else{
                             console.log("reg error");

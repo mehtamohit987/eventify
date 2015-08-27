@@ -5,6 +5,7 @@ urlpatterns = [
     
     url(r'^auth-token/$',views.ObtainAuthToken.as_view()),
     url(r'^getuserid/$', views.getuserid),
+    url(r'^getemailexistence/$', views.get_email_existence),
     url(r'^(?P<user_id>[0-9a-zA-Z]+)/$', views.UserDetail.as_view()),
     url(r'^$', views.UserList.as_view()),
     url(r'^(?P<user_id>[0-9a-zA-Z]+)/favourite/(?P<id>[0-9a-zA-Z]+)$', views.FavouriteDetail.as_view()),

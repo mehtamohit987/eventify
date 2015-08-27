@@ -20,7 +20,7 @@
                 
                 <span>{{event.num_fav==null?'':event.num_fav+' users favourited this.'}}</span>
             </div>
-            <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
+            <h4>{{event.city | limitTo: 20}}, {{event.country}}</h6>
             <h6>{{event.start_timestamp.substring(0,10) + ' at ' +  event.start_timestamp.substring(11,19)}}</h6>
         </div>
     </div>

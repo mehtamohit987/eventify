@@ -43,17 +43,21 @@
                            <span class="icon-bar"></span>
                            <span class="icon-bar"></span>
                        </button>
-                       <a class="navbar-brand" href="#/" on-click="function(){console.log('dabaya');window.scrollTo(0,0);})();">Eventify</a>
+                       <a class="navbar-brand" href="#/">Eventify</a>
                    </div>
                    <div class="navbar-collapse collapse navbar-inverse-collapse">
                        
                        <div class=" main-frame pull-left" >
                        
                            <div style="padding-top: 10px; padding-left:30px; padding-right:30px;" class="search-box row-fluid form-inline input-append">
-                               <input class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" placeholder="Event Search" ng-change="queryChanged()"> 
-
-
                                
+                               <input id="titleQueryBox" class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" ng-model-options='{ debounce: 2000 }' placeholder="Event Search" ng-change="queryChanged()" list="autocompletelist">
+
+                               <datalist id="autocompletelist">
+                               <option ng-repeat="auto in autocompletelist | limitTo: 5">{{auto}}<option>
+                               </datalist>
+
+
                                <select ng-model="selected_country" class="form-control" style="width:180px;">
                                    <option value="">-Select Country-</option>
                                    <option  ng-repeat="country in country_keys" value="{{country}}">{{ countries[country] }}</option>
@@ -251,13 +255,14 @@
     <script src="{% static 'WebApp/scripts/angular-route.js' %}"></script>
     <script src="{% static 'WebApp/scripts/angular-cookies.js' %}"></script>
     <script src="{% static 'WebApp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'WebApp/scripts/md5.js' %}"></script>
+
     <script src="{% static 'WebApp/scripts/app.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/mainController.js' %}"></script>
     <script type="text/javascript" src= "{% static 'WebApp/scripts/services/AuthToken.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/homeController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myfavController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/searchController.js' %}"></script>
-    
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myprofileController.js' %}"></script>
 
 </body>

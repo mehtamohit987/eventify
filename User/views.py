@@ -178,6 +178,17 @@ def getuserid(request):
 	return HttpResponse(json_data, content_type="application/json")
 
 
+
+
+@api_view(['GET'])
+def get_email_existence(request):
+	print User.objects(email__iexact=request.GET['q'])
+	the_data = {
+		'result': True if( User.objects(email__iexact=request.GET['q']).count() == 0 ) else False
+	}
+	json_data = JSONRenderer().render(the_data)
+	return HttpResponse(json_data, content_type="application/json")
+
 	# def get_queryset(self):
 	# 	print IsTheSameUser
 	# 	print self.kwargs

@@ -14,7 +14,7 @@ def send_an_email(to, subject, body):
 	username = 'eventifycoder@gmail.com'
 	pwd = '!@#$QWER'
 	FROM = username
-	TO = [username]
+	TO = [to]
 	SUBJECT = subject
 	TEXT = body
 	

@@ -7,7 +7,7 @@ fav					=		DONE
 	- top nearby fav events						/
 	- fav/unfav view put delete events count	/
 
-	- user fav array api
+	- user fav array appropriately				/
 
 auto-complete:
 	- backend done				/
@@ -20,28 +20,31 @@ automation:
 	- eventful					/
 	- solr update				/		
 	- cron						/
-	- email scheduling
+	- email scheduling			/
 	
 
 Front end:	
-	- change to PATCH req
+	- change to PATCH req 		/
 
 	ON SUNDAY:
-	- auth token refresh mechanism	= local storage timestamp saving and before and server req check validity of saved key
-	- logged in state and parameters in a service
+	- auth token refresh mechanism	= local storage timestamp saving and before and server req check validity of saved key 	/
+	- logged in state and parameters in a service 	/
 
-	- fav/ unfav check behaviour - service based
-	- default home views 		=  api/events/?sort=true	api/events/?latitude=__&longitude=__&sort=true
+	- fav/ unfav check behaviour - service based 	/
+	- default home views 		=  api/events/?sort=true	/
+
+
+	api/events/?latitude=__&longitude=__&sort=true 		---------------
 	
-	- servici-fy stuff
-	- md5 passw easy
+	- servici-fy stuff	/
+	- md5 passw easy	/
 	
 	ON MONDAY:
-	- autocomplete implementation
-	- calendar picker
-	- profile edit menu
-	- mohit - angular csrf
-	- validations
+	- autocomplete implementation	/
+	- calendar picker	---------------------------
+	- profile edit menu	==---=--=-=-==-=  
+	- mohit - angular csrf	/
+	- validations	=-=-=-=-==-=  email, passCha
 
 
 testing:
