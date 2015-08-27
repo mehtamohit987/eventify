@@ -153,7 +153,10 @@ def favouritearraylist(request, user_id):
 
 	for fav in UserFavourite.objects():
 		if str(fav.user.id) == user_id:
-			favList.append(str(fav.fav_event.id))
+			favList.append({
+				'event_id': str(fav.fav_event.id),
+				'fav_id': str(fav.id)
+			})
 	
 
 	the_data = {

@@ -166,6 +166,8 @@ angular.module('eventify')
 
                 if (service.user_id== null || service.user_id == '' || service.authToken==null || service.authToken=='') {fav_events=null; return;}
 
+                console.log('main tahan');
+
                                 
                 var url = "http://" + service.host + ":" + service.port +"/api/user/" + String(service.user_id) + "/favouritearraylist";
                 var req = {

@@ -35,8 +35,9 @@
 
             for (var i=0; i<$scope.events.length;i++){
                 for(var j=0; j < $scope.fav_events_of_user.length; j++){
-                    if (String($scope.events[i].id) == $scope.fav_events_of_user[j]){
+                    if (String($scope.events[i].id) == $scope.fav_events_of_user[j]['event_id']){
                         $scope.events[i]['is']=true;
+                        $scope.events[i]['fav_id']=$scope.fav_events_of_user[j]['fav_id'];
                         break;
                     }
                     
@@ -70,7 +71,9 @@
 
         var renderContent = function(p){
 
+            if(p==0) AuthToken.get_fav_event_list();
             x = titleQuery;
+            window.scrollTo(0,0);
            
             if(x!=null&&x!=''&&x!=' ')
             {       
@@ -88,13 +91,16 @@
                     .success(function(data){
 
                         for(var i=0;i<data.results.length;i++)
+                        {   
                             data.results[i]['is'] = false;
+                            data.results[i]['fav_id'] = null;
+                        }
 
                         console.log(data.results);
 
                         $scope.events = data.results;
                         $scope.fav_events_of_user = AuthToken.get_fav_event_list();
-                        // if ($scope.loggedIn) run_assessment();
+                        if ($scope.loggedIn && $scope.fav_events_of_user!=null) run_assessment();
 
 
                         $scope.prevExists = data['previous'];
@@ -139,10 +145,14 @@
                'Authorization': 'Token ' + String(authToken)
              }
             }
+
             $scope.events[$index]['is'] = false;
             $scope.events[$index]['num_fav']--;
 
             $http(req);
+
+            AuthToken.generate_fav_event_list();
+
         };
 
         $scope.favourite = function($index, id){
@@ -164,21 +174,26 @@
 
             $http(req)
                 .then(function(data){
+                    console.log(data);
+                    console.log(data.data.id);
                     $scope.events[$index]['is'] = true;
                     $scope.events[$index]['num_fav']++;
+                    $scope.events[$index]['fav_id'] = data.data.id;
                 }
                 ,
                 function(data){
                     console.log("error");
                 }
             );   
+
+            AuthToken.generate_fav_event_list();
+
         };
 
 
         $scope.prevPage = function($event){
             renderContent(-1);
             $scope.currentPage --;
-            window.scrollTo(0,0);
             if ($scope.loggedIn) run_assessment();
         };
 
@@ -187,7 +202,6 @@
         $scope.nextPage = function($event){
             renderContent(1)
             $scope.currentPage ++;
-            window.scrollTo(0,0);
             if ($scope.loggedIn) run_assessment();
         };
 

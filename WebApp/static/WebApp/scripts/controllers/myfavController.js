@@ -24,7 +24,8 @@
 
 
         var renderContent = function(p){                
-
+            
+            window.scrollTo(0,0);
         	x = AuthToken.get_user_id();
         	y = AuthToken.get_token();
             
@@ -63,7 +64,7 @@
                     $scope.prevExists = null;
                     $scope.nextExists = null;
                 }
-                );
+            );
         }
 
 
@@ -87,14 +88,17 @@
 
             $http(req)
                 .then(function(data){
+                    
                     $scope.favs[$index].fav_event['is'] = true;
-                    $scope.favs[$index].fav_event['num_fav']++;
+                    $scope.favs[$index].fav_event['num_fav']++;                
                 }
                 ,
                 function(data){
                     console.log("error");
                 }
             );   
+
+            AuthToken.generate_fav_event_list();
 
         };
         
@@ -103,7 +107,9 @@
             if (id == null || $scope.loggedIn==false) return;
             var user_id = AuthToken.get_user_id();
             var authToken = AuthToken.get_token();
-            if (user_id==null||authToken==null)return;
+            
+            if (user_id==null||authToken==null)
+                return;
 
             var fav_url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(user_id) + "/favourite/" + String(id);
             var req = {
@@ -118,13 +124,14 @@
 
             $http(req);
 
+            AuthToken.generate_fav_event_list();
+
         };
 
         $scope.prevPage = function($event){
 
 			renderContent(-1);
             $scope.currentPage --;
-            window.scrollTo(0,0);
         };
 
 
@@ -133,7 +140,6 @@
 
             renderContent(1)
             $scope.currentPage ++;
-            window.scrollTo(0,0);
         };
 
 

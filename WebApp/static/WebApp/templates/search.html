@@ -1,6 +1,5 @@
  <div style="margin-left:10%;">
  <h2 ng-if="searching" > Search Results </h2>
- <span>{{fav_events_of_user.length}}</span>
   <div ng-if = "searching" class="alert alert-dismissable alert-success">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p>Number of Results found:  {{ numFound }} </p>
@@ -15,14 +14,11 @@
                 </div>
                 
                 <div ng-if="loggedIn" class="col-lg-4">
-                    <button class = "btn btn-default" ng-if="event.is" ng-click="unfavourite($index, event.id)">Unfavourite</button>
+                    <button class = "btn btn-default" ng-if="event.is" ng-click="unfavourite($index, event.fav_id)">Unfavourite</button>
                     <button class = "btn btn-primary" ng-if="!event.is" ng-click="favourite($index, event.id)">Favourite</button>
-                </div>
-
-                
+                </div>                
                 
                 <span>{{event.num_fav==null?'':event.num_fav+' users favourited this.'}}</span>
-                <span>{{event.id}}</span>
             </div>
             <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
             <h6>{{event.start_timestamp.substring(0,10) + ' at ' +  event.start_timestamp.substring(11,19)}}</h6>
