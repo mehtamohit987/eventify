@@ -1,5 +1,5 @@
- <div style="margin-left:20px;">
-
+ <div style="margin-left:10%;">
+ <h2 ng-if="searching" > Search Results </h2>
   <div ng-if = "searching" class="alert alert-dismissable alert-success">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p>Number of Results found:  {{ numFound }} </p>
@@ -8,16 +8,20 @@
 <div class="event" ng-repeat="event in events">
     <div class="row">
         <div class="col-lg-12">
-            <div class="page-header">
-                <div class = "text-inline"><h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> </div>
-                <h4>{{event.city  | limitTo: 20}}, {{event.country}}</h6>
-                <h6>{{event.start_timestamp.substring(0,10) + 'at' +  event.start_timestamp.substring(11,19)}}</h6>
-                <div ng-if="loggedIn">
-                <button ng-if="event.is">Unfavourite</button>
-                <button ng-if="!event.is">Favourite</button>
+            <div class="page-header row">
+                <div class = "text-inline col-lg-8">
+                    <h3>{{event.title | limitTo: 14}} </h3><h6>Organized by: {{event.organizer | limitTo: 10}}</h6> 
                 </div>
+                
+                <div ng-if="loggedIn" class="col-lg-4">
+                    <button class = "btn btn-default" ng-if="event.is" ng-click="unfavourite($index, event.fav_id)">Unfavourite</button>
+                    <button class = "btn btn-primary" ng-if="!event.is" ng-click="favourite($index, event.id)">Favourite</button>
+                </div>                
+                
                 <span>{{event.num_fav==null?'':event.num_fav+' users favourited this.'}}</span>
             </div>
+            <h4>{{event.city | limitTo: 20}}, {{event.country}}</h6>
+            <h6>{{event.start_timestamp.substring(0,10) + ' at ' +  event.start_timestamp.substring(11,19)}}</h6>
         </div>
     </div>
 
@@ -37,7 +41,7 @@
 
 
             <p style="font-size:12px;">{{event.description | limitTo: 500}} 
-            <a ng-href={{event.info_url}}>...(continue reading)...<a>
+            <a ng-href={{event.info_url}}>...(continue reading)...</a>
             </p>
             <p style="font-size:12px;">Address: {{event.address | limitTo: 50}}</p>
             
@@ -46,17 +50,17 @@
     </div>
   </div>
 
-<div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
-<ul class="pager">
-<li class="previous" ng-click="prevPage()" ng-if="prevExists">
-<a>Previous</a>
-</li>
+  <div class="jumbotron" ng-if="searching && (prevExists || nextExists)" style="margin-left:25px;">
+      <ul class="pager">
+          <li class="previous" ng-click="prevPage()" ng-if="prevExists">
+          <a>Previous</a>
+          </li>
 
-<p style="text-align:center;">Page No. : {{currentPage}}</p>
-<li class="next" ng-click="nextPage()" ng-if="nextExists">
-<a>Next</a>
-</li>
-</ul>
-</div>
+          <span style="text-align:center;">Page No. : {{currentPage}}</span>
+          <li class="next" ng-click="nextPage()" ng-if="nextExists">
+          <a>Next</a>
+          </li>
+      </ul>
+  </div>
 
 </div>

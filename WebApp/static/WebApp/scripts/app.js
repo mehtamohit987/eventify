@@ -1,7 +1,12 @@
 (function(){
 
-	var eventify = angular.module("eventify", ['ngRoute']);
+	var eventify = angular.module("eventify", ['ngRoute','ngCookies']);
 
+	eventify.run(function($http, $cookies){
+
+		$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
+
+	})
 	eventify.config(['$routeProvider', 
 	    function($routeProvider){
 

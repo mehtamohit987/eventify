@@ -153,7 +153,10 @@ def favouritearraylist(request, user_id):
 
 	for fav in UserFavourite.objects():
 		if str(fav.user.id) == user_id:
-			favList.append(str(fav.fav_event.id))
+			favList.append({
+				'event_id': str(fav.fav_event.id),
+				'fav_id': str(fav.id)
+			})
 	
 
 	the_data = {
@@ -174,6 +177,17 @@ def getuserid(request):
 	json_data = JSONRenderer().render(the_data)
 	return HttpResponse(json_data, content_type="application/json")
 
+
+
+
+@api_view(['GET'])
+def get_email_existence(request):
+	print User.objects(email__iexact=request.GET['q'])
+	the_data = {
+		'result': True if( User.objects(email__iexact=request.GET['q']).count() == 0 ) else False
+	}
+	json_data = JSONRenderer().render(the_data)
+	return HttpResponse(json_data, content_type="application/json")
 
 	# def get_queryset(self):
 	# 	print IsTheSameUser

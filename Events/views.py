@@ -135,8 +135,14 @@ class EventDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 @api_view(['GET'])
 def autocomplete(request):
 	if request.method == 'GET':
-		sys = SearchQuerySet().autocomplete(title_ngram = request.GET.get('q',''))[:5]
+		sys = SearchQuerySet().autocomplete(title_ngram = request.GET.get('q',''))
+
 		suggestions = [result.title for result in sys]
+
+		suggestions_set = set(suggestions)
+
+		suggestions_final = list(suggestions_set)[:15]
+
 		the_data = {
 			'results': suggestions
 		}

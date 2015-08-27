@@ -3,24 +3,33 @@
 
     var eventify = angular.module("eventify");
 
-    eventify.controller('myfavController', ['$scope', '$http', function ($scope, $http) {
-
-        var host =  'localhost';
-        var port = '8000';
+    eventify.controller('myfavController', ['$scope', '$http', 'AuthToken', function ($scope, $http, AuthToken) {
 
         $scope.currentPage = 0;
-        $scope.prevExists = null;
+        $scope.prevExists = null; 
         $scope.nextExists = null;
-        $scope.favs = null
+        $scope.favs = null;
+
+
+        $scope.loggedIn = false;        
+        if ( AuthToken.get_token() != null){
+            $scope.loggedIn = true; 
+        }
+        $scope.$on('authSuccess',function(event){
+            $scope.loggedIn = true;
+        });
+        $scope.$on('logOut', function(event){
+            $scope.loggedIn = false;
+        });
+
 
         var renderContent = function(p){                
-
-            /////////
-            $scope.loggedIn=true;
-        	x = '55d9a817ef931843e7b174c4';
-        	y = '282a99fa5f7ee9d79e05c4d644fc10b6ac3ea5660274';
-            ////////
-            var url = (p==0 ? "http://" + host + ":" + port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
+            
+            window.scrollTo(0,0);
+        	x = AuthToken.get_user_id();
+        	y = AuthToken.get_token();
+            
+            var url = (p==0 ? "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(x) + "/favourite" : ( p==-1? $scope.prevExists : $scope.nextExists )  )
 
             var req = {
 			 method: 'GET',
@@ -32,17 +41,14 @@
 
             $http(req)
                 .then(function(data){
-                    console.log(data)
                     $scope.favs = data.data.results;
-                    console.log(data.data.results);
 
                     angular.forEach($scope.favs, function(fav, key){
                     	fav.fav_event['is'] = true;
-                    	console.log(fav);
                     });
 
-                    $scope.prevExists = data['previous'];
-                    $scope.nextExists = data['next'];
+                    $scope.prevExists = data.data['previous'];
+                    $scope.nextExists = data.data['next'];
                     if (data.count == 0)
                     { $scope.currentPage = 0; }
                     else 
@@ -57,31 +63,83 @@
                     $scope.events = null;
                     $scope.prevExists = null;
                     $scope.nextExists = null;
-                    
                 }
-                );
+            );
         }
 
 
 
+        $scope.favourite = function($index, id){
 
+            if (id == null || $scope.loggedIn==false) return;
+            var user_id = AuthToken.get_user_id();
+            var authToken = AuthToken.get_token();
+            if (user_id==null||authToken==null)return;
+
+            var fav_url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(user_id) + "/favourite/";
+            var req = {
+             method: 'POST',
+             url: fav_url,
+             headers: {
+               'Authorization': 'Token ' + String(authToken)
+             },
+             data: {fav_event: id} 
+            }
+
+            $http(req)
+                .then(function(data){
+                    
+                    $scope.favs[$index].fav_event['is'] = true;
+                    $scope.favs[$index].fav_event['num_fav']++;                
+                }
+                ,
+                function(data){
+                    console.log("error");
+                }
+            );   
+
+            AuthToken.generate_fav_event_list();
+
+        };
+        
+        $scope.unfavourite= function($index, id){
+
+            if (id == null || $scope.loggedIn==false) return;
+            var user_id = AuthToken.get_user_id();
+            var authToken = AuthToken.get_token();
+            
+            if (user_id==null||authToken==null)
+                return;
+
+            var fav_url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/" + String(user_id) + "/favourite/" + String(id);
+            var req = {
+             method: 'DELETE',
+             url: fav_url,
+             headers: {
+               'Authorization': 'Token ' + String(authToken)
+             }
+            }
+            $scope.favs[$index].fav_event['is'] = false;
+            $scope.favs[$index].fav_event['num_fav']--;
+
+            $http(req);
+
+            AuthToken.generate_fav_event_list();
+
+        };
 
         $scope.prevPage = function($event){
 
 			renderContent(-1);
-
             $scope.currentPage --;
-            console.log('prev_page')
         };
 
 
 
         $scope.nextPage = function($event){
 
-            // renderDate();
             renderContent(1)
             $scope.currentPage ++;
-            console.log('next_page')
         };
 
 
