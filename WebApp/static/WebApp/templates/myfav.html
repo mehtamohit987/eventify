@@ -1,4 +1,5 @@
- <div style="margin-left:20px;">
+<div style="margin-left:10%;">
+<h2> Your Favourites  </h2>
 
 <div class="event" ng-repeat="fav in favs" ng-if="loggedIn">
     <div class="row">
@@ -43,7 +44,7 @@
     </div>
   </div>
 
-<div class="jumbotron" ng-if="(prevExists || nextExists)" style="margin-left:17%;">
+<div class="jumbotron" ng-if="loggedIn && (prevExists || nextExists)" style="margin-left:17%;">
     <ul class="pager">
         <li class="previous" ng-click="prevPage()" ng-if="prevExists">
         <a>Previous</a>

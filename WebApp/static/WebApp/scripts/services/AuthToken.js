@@ -112,7 +112,6 @@ angular.module('eventify')
                         return true;
                     }
                     else{
-                        console.log('hamri validity fuckuop');
                         console.log(valid);
                         console.log(new Date());
                         service.unset_local_storage();
@@ -179,8 +178,10 @@ angular.module('eventify')
 
                 $http(req)
                     .then(function(data){
-                        console.log(data)
+                        // console.log(data)
                         service.fav_events = data.data.results;        
+                        console.log(service.fav_events);
+                        $rootScope.$broadcast("favListGenerated");
                     }
                     ,
                     function(data){
@@ -222,16 +223,20 @@ angular.module('eventify')
             
             service.get_user_id = function(){
                 if(service.user_id==null)
-                    generate_user_id();
+                    service.generate_user_id();
                 return service.user_id;
             };
 
             service.get_fav_event_list = function(){
                 if(service.fav_events==null)
-                    generate_fav_event_list();
+                    service.generate_fav_event_list();
                 
-                if(service.fav_events!=null)
+                if(service.fav_events!=null){
+                    console.log('here');
+                    console.log(service.fav_events);
                     return service.fav_events;
+
+                }
                 else
                     return [];
             };

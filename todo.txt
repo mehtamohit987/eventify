@@ -41,6 +41,7 @@ Front end:
 	- calendar picker
 	- profile edit menu
 	- mohit - angular csrf
+	- validations
 
 
 testing:

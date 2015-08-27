@@ -80,7 +80,7 @@
                       <ul class="nav navbar-nav" style="margin-left:60px;">
 
 
-                      <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:;" data-toggle="modal" data-target="#loginModal"> Login/SignUp </a></li>
+                      <li ng-if="!loggedIn"><a class="btn btn-launch" href="javascript:void(0);" data-toggle="modal" data-target="#loginModal"> Login/SignUp </a></li>
                        
                        <li ng-if="loggedIn">
                        <a class="dropdown-toggle" data-toggle="dropdown"> Me <b class="caret"></b></a>
@@ -249,15 +249,16 @@
     <script src="{% static 'WebApp/scripts/jquery-1.10.2.min.js' %}"></script>
     <script src="{% static 'WebApp/scripts/angular.min.js' %}"></script>
     <script src="{% static 'WebApp/scripts/angular-route.js' %}"></script>
+    <script src="{% static 'WebApp/scripts/angular-cookies.js' %}"></script>
     <script src="{% static 'WebApp/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'WebApp/scripts/app.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/mainController.js' %}"></script>
     <script type="text/javascript" src= "{% static 'WebApp/scripts/services/AuthToken.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/homeController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myfavController.js' %}"></script>
-    <!--<script type="text/javascript" src="{% static 'WebApp/scripts/controllers/searchController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/searchController.js' %}"></script>
     
-    <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myprofileController.js' %}"></script>-->
+    <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myprofileController.js' %}"></script>
 
 </body>
 

@@ -10,12 +10,14 @@
         $scope.numFound = 0
 
         var coordinates = null;
-        // $scope.$on('locationHit',function(event, args){
-            
-        //     coordinates = args.coordinates;
-        //     console.log(coordinates)
-        //     // renderContent();
-        // });
+
+
+        $scope.$on('locationHit',function(event, args){
+            console.log("hit")
+            coordinates = args.coordinates;
+            console.log(coordinates)
+            renderContent();
+        });
 
 
 
