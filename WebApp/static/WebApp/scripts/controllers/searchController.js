@@ -66,15 +66,18 @@
             coordinates = args.coordinates;
             selected_country = args.selected_country;
             renderContent(page)
+            console.log(coordinates)
 
         });
+        //console.log(coordinates)
 
         var renderContent = function(p){
-
+            //console.log(coordinates)
             if(p==0) AuthToken.get_fav_event_list();
             x = titleQuery;
             window.scrollTo(0,0);
-           
+                       
+                       
             if(x!=null&&x!=''&&x!=' ')
             {       
 
@@ -105,7 +108,7 @@
                         $scope.prevExists = data['previous'];
                         $scope.nextExists = data['next'];
                         if (data.count == 0)
-                        {    $scope.searching = false; $scope.currentPage = 0;}
+                        {    $scope.searching = true; $scope.currentPage = 0;}
                         else 
                         {
                             $scope.searching = true;

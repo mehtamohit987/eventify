@@ -63,13 +63,15 @@
                             <td ng-if = "editting"><input ng-model = "profile.postal_code" type="text" class="form-control editField" value="{{postal_code}}" ></td>
                             
                         </tr>
-                        <!-- <tr class="">
-                            <td>7</td>
+                        <tr class="">
+                            <td>8</td>
                             <td>Coordinates</td>
-                            <td ng-if = "!editting">{{coordinates}}</td>
-                            <td ng-if = "editting"><input type="text" ng-model = "profile.coordinates" class="form-control editField" value="{{coordinates}}" ></td>
+                            <td ng-if = "!editting">Latitude: {{coordinates.slice(11,19)}} and Longitude: {{coordinates.slice(31,39)}}</td>
+                            <td ng-if = "editting"><button class="btn btn-mini glyphicon glyphicon-map-marker form-control" ng-click="Plocation_button()"></button> </td>
+                            <!-- <td ng-if = "!editting">{{coordinates}}</td>
+                            <td ng-if = "editting"><input type="text" ng-model = "profile.coordinates" class="form-control editField" value="{{coordinates}}" ></td> -->
                         </tr> 
-                    <!-- </tbody> -->
+                        </tbody>
                 </table>
                 <a ng-click = "profileEdit_button()" class="btn btn-danger editBtn">Edit</a>
                 <button ng-if = "editting" type="submit" class="btn btn-default" style = "align:center" ng-click = "profileSubmit()" >Submit</button>

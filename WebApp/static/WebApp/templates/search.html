@@ -1,9 +1,10 @@
  <div style="margin-left:10%;">
- <h2 ng-if="searching" > Search Results </h2>
+ 
   <div ng-if = "searching" class="alert alert-dismissable alert-success">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <p>Number of Results found:  {{ numFound }} </p>
   </div>
+  <h2 ng-if="searching" > Search Results </h2>
 
 <div class="event" ng-repeat="event in events">
     <div class="row">

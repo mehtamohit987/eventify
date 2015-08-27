@@ -17,7 +17,7 @@
 
 
 
-        $scope.profile = {'fname':'', 'lname' : '', 'address':'', 'city': '', 'country': '', 'postal_code': '', 'coordinates' : ''}
+        $scope.profile = {}
 
         var d={};
 
@@ -31,6 +31,18 @@
         $scope.$on('logOut', function(event){
             $scope.loggedIn = false;
         });
+
+
+
+        $scope.Plocation_button = function() {
+            // if($scope.coordinates!=null) {$scope.coordinates=null;}
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(pos){$scope.coordinates = pos['coords'];});
+            }
+            console.log($scope.coordinates);
+
+        };
+        console.log($scope.coordinates);
 
 
         var renderProfile = function(){                
@@ -83,8 +95,13 @@
         	x = AuthToken.get_user_id();
         	y = AuthToken.get_token();
             
-
-
+            console.log($scope.coordinates);
+            var c = (($scope.coordinates==null||$scope.coordinates=="") ? '' : '&latitude=' + String(AuthToken.roundit($scope.coordinates['latitude'], 6)) + '&longitude=' + String(AuthToken.roundit($scope.coordinates['longitude'], 6)) );
+            console.log(c);
+            // $scope.latitude = c.slice(11,19);
+            // $scope.longitude = String(AuthToken.roundit($scope.coordinates['longitude'], 6));
+            // console.log($scope.longitude);
+            // console.log($scope.latitude);
             if( ($scope.profileDetail.data.fname != $scope.profile.fname) && ($scope.profile.fname !='') )
                 d['fname']=$scope.profile.fname;
             if( ($scope.profileDetail.data.lname != $scope.profile.lname) && ($scope.profile.lname !='') )                
@@ -99,8 +116,8 @@
                 d['country']=$scope.profile.country;
             if( ($scope.profileDetail.data.postal_code != $scope.profile.postal_code) && ($scope.profile.postal_code !='') )
                 d['postal_code']=$scope.profile.postal_code;
-            if( ($scope.profileDetail.data.coordinates != $scope.profile.coordinates) && ($scope.profile.coordinates !='') )
-                d['coordinates']=$scope.profile.coordinates;
+            if( (c !='') )
+                d['coordinates']=c;
 
             var url = "http://" + AuthToken.host + ":" + AuthToken.port + "/api/user/" + String(x) 
             
@@ -157,6 +174,8 @@
 
 
         };
+
+
 
 
         // $scope.editting = false;
