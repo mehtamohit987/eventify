@@ -9,19 +9,19 @@
                 <table class="table table-striped table-hover">
    
                         <tr>
-                            <td>1</td>
+                            <!-- <td>1</td> -->
                             <td>First Name</td>
-                            <td ng-if = "!editting">{{firstName}}</td>
-                            <td ng-if = "editting">
+                            <td ng-if = "!(editting_profile&&editting_password)">{{firstName}}</td>
+                            <td ng-if = "editting_profile">
                             	<input type="text" ng-model = "profile.fname" class="form-control editField" value="{{firstName}}" >
                             </td>
                             
                         </tr>
                         <tr>
-                            <td>2</td>
+                            <!-- <td>2</td> -->
                             <td>Last Name</td>
-                            <td ng-if = "!editting">{{lastName}}</td>
-                            <td ng-if = "editting">
+                            <td ng-if = "!(editting_profile&&editting_password)">{{lastName}}</td>
+                            <td ng-if = "editting_profile">
                             	<input  ng-model = "profile.lname" type="text" class="form-control editField" value="{{lastName}}" >
 
                             </td>
@@ -29,52 +29,68 @@
                             
                         </tr>
                         <tr class="danger">
-                            <td>3</td>
+                            <!-- <td>3</td> -->
                             <td>Email ID</td>
                             <td>{{email}}</td>
                             
                         </tr>
                         <tr class="">
-                            <td>4</td>
+                            <!-- <td>4</td> -->
                             <td>Address</td>
-                            
-                            <td ng-if = "editting"><input type="text" ng-model = "profile.address" class="form-control editField" value="{{address}}" ></td>
-                            <td ng-if = "!editting">{{address}}</td>
+                            <td ng-if = "!(editting_profile&&editting_password)">{{address}}</td>
+                            <td ng-if = "editting_profile"><input type="text" ng-model = "profile.address" class="form-control editField" value="{{address}}" ></td>
                             
                         </tr>
                         <tr class="">
-                            <td>5</td>
+                            <!-- <td>5</td> -->
                             <td>City</td>
-                            <td ng-if = "!editting">{{city}}</td>
-                            <td ng-if = "editting"><input ng-model = "profile.city" type="text" class="form-control editField" value="{{city}}" ></td>
+                            <td ng-if = "!(editting_profile&&editting_password)">{{city}}</td>
+                            <td ng-if = "editting_profile"><input ng-model = "profile.city" type="text" class="form-control editField" value="{{city}}" ></td>
                             
                         </tr>
                         <tr class="">
-                            <td>6</td>
+                            <!-- <td>6</td> -->
                             <td>Country</td>
-                            <td ng-if = "!editting">{{country}}</td>
-                            <td ng-if = "editting"><input type="text" ng-model = "profile.country" class="form-control editField" value="{{country}}" ></td>
+                            <td ng-if = "!(editting_profile&&editting_password)">{{country}}</td>
+                            <td ng-if = "editting_profile"><input type="text" ng-model = "profile.country" class="form-control editField" value="{{country}}" ></td>
                             
                         </tr>
                         <tr class="">
-                            <td>7</td>
+                            <!-- <td>7</td> -->
                             <td>Postal Code</td>
-                            <td ng-if = "!editting">{{postal_code}}</td>
-                            <td ng-if = "editting"><input ng-model = "profile.postal_code" type="text" class="form-control editField" value="{{postal_code}}" ></td>
+                            <td ng-if = "!(editting_profile&&editting_password)">{{postal_code}}</td>
+                            <td ng-if = "editting_profile"><input ng-model = "profile.postal_code" type="text" class="form-control editField" value="{{postal_code}}" ></td>
                             
                         </tr>
                         <tr class="">
-                            <td>8</td>
+                            <!-- <td>8</td> -->
                             <td>Coordinates</td>
-                            <td ng-if = "!editting">Latitude: {{coordinates.split(', ')[0]}} and Longitude: {{coordinates.split(', ')[1]}}</td>
-                            <td ng-if = "editting"><button class="btn btn-mini glyphicon glyphicon-map-marker form-control" ng-click="Plocation_button()"></button> </td>
-                            <!-- <td ng-if = "!editting">{{coordinates}}</td>
-                            <td ng-if = "editting"><input type="text" ng-model = "profile.coordinates" class="form-control editField" value="{{coordinates}}" ></td> -->
+                            <td ng-if = "!(editting_profile&&editting_password)">Latitude: {{coordinates.split(', ')[0]}} and Longitude: {{coordinates.split(', ')[1]}}</td>
+                            <td ng-if = "editting_profile"><button class="btn btn-mini glyphicon glyphicon-map-marker form-control" ng-click="Plocation_button()"></button> </td>
+                            <!-- <td ng-if = "!editting_profile">{{coordinates}}</td>
+                            <td ng-if = "editting_profile"><input type="text" ng-model = "profile.coordinates" class="form-control editField" value="{{coordinates}}" ></td> -->
                         </tr> 
+
+
+
+                        <tr>
+                        <td class="" ng-if="editting_password">
+                            <span>Password</span>
+                            <span><input ng-model = "profile.password" type="password" class="form-control editField" placeholder="Password" ng-change="pass_check()"></span>
+                        </td>
+                        <td class="" ng-if="editting_password">
+                            <span>Re-enter Password</span>
+                            <span><input ng-model = "profile.re_password" type="password" class="form-control editField" placeholder="Re-type Password" ng-change="pass_check()" ></span>
+                            <span ng-if="disableSubmit" style="position: relative; top: 50%; color: red;">Password mismatch.</span>
+                        </td>
+                        
+
+                        </tr>
                         </tbody>
                 </table>
-                <a ng-click = "profileEdit_button()" class="btn btn-danger editBtn">Edit</a>
-                <button ng-if = "editting" type="submit" class="btn btn-default" style = "align:center" ng-click = "profileSubmit()" >Submit</button>
+                <a ng-click = "profileEdit_button()" class="btn btn-primary">Edit Profile</a>
+                <a ng-click = "passwordEdit_button()" class="btn btn-primary">Edit Password</a>
+                <button ng-if = "(editting_profile||editting_password)" ng-disabled="disableSubmit" type="submit" class="btn btn-default" style = "align:center" ng-click = "profileSubmit()" >Submit</button>
                 
             </form>
         </div>
@@ -110,7 +126,7 @@
 
 </div>
 <div ng-if = "!loggedIn" style = "text-align:center">
-	<h1>Please Login to see your profile.</h1>
+	<h2>Please Login to see your profile.</h2>
 	
 </div>
 

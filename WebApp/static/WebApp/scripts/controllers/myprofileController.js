@@ -16,10 +16,12 @@
         $scope.coordinates = null;
 
 
+        $scope.editting_profile = false;
+        $scope.editting_password = false;
 
-        $scope.profile = {}
-
-        var d={};
+        $scope.profile = {};
+        $scope.disableSubmit = false;
+        
 
         $scope.loggedIn = false;        
         if ( AuthToken.get_token() != null){
@@ -67,6 +69,7 @@
 
                     console.log(data.data.fname);
 
+                    console.log(data.data.id);
                     $scope.firstName = data.data.fname;
                     $scope.lastName = data.data.lname;
                     $scope.email = data.data.email;
@@ -90,34 +93,44 @@
                 console.log($scope.lastName);
         }
 
-        var editProfile = function(){                
-
+        var editProfile = function(pass_upd){                
+            var d={};
         	x = AuthToken.get_user_id();
         	y = AuthToken.get_token();
             
-            console.log($scope.coordinates);
-            var c = (($scope.coordinates==null||$scope.coordinates=="") ? '' : String(AuthToken.roundit($scope.coordinates['latitude'], 6)) + ', ' + String(AuthToken.roundit($scope.coordinates['longitude'], 6)) );
-            console.log(c);
-            // $scope.latitude = c.slice(11,19);
-            // $scope.longitude = String(AuthToken.roundit($scope.coordinates['longitude'], 6));
-            // console.log($scope.longitude);
-            // console.log($scope.latitude);
-            if( ($scope.profileDetail.data.fname != $scope.profile.fname) && ($scope.profile.fname !='') )
-                d['fname']=$scope.profile.fname;
-            if( ($scope.profileDetail.data.lname != $scope.profile.lname) && ($scope.profile.lname !='') )                
-                d['lname']=$scope.profile.lname;
-            if( ($scope.profileDetail.data.email != $scope.profile.email) && ($scope.profile.email !='') )
-                d['email']=$scope.profile.email;
-            if( ($scope.profileDetail.data.address != $scope.profile.address) && ($scope.profile.address!='') )
-                d['address']=$scope.profile.address;
-            if( ($scope.profileDetail.data.city != $scope.profile.city) && ($scope.profile.city !='') )
-                d['city']=$scope.profile.city;
-            if( ($scope.profileDetail.data.country != $scope.profile.country) && ($scope.profile.country !='') )
-                d['country']=$scope.profile.country;
-            if( ($scope.profileDetail.data.postal_code != $scope.profile.postal_code) && ($scope.profile.postal_code !='') )
-                d['postal_code']=$scope.profile.postal_code;
-            if( (c !='') )
-                d['coordinates']=c;
+
+            if(pass_upd==true){
+                d['password']=String(CryptoJS.MD5($scope.profile.password));
+                console.log(String(d['password']));
+            }
+            else{
+
+
+                console.log($scope.coordinates);
+                var c = (($scope.coordinates==null||$scope.coordinates=="") ? '' : String(AuthToken.roundit($scope.coordinates['latitude'], 6)) + ', ' + String(AuthToken.roundit($scope.coordinates['longitude'], 6)) );
+                console.log(c);
+                // $scope.latitude = c.slice(11,19);
+                // $scope.longitude = String(AuthToken.roundit($scope.coordinates['longitude'], 6));
+                // console.log($scope.longitude);
+                // console.log($scope.latitude);
+                if( ($scope.profileDetail.data.fname != $scope.profile.fname) && ($scope.profile.fname !='') )
+                    d['fname']=$scope.profile.fname;
+                if( ($scope.profileDetail.data.lname != $scope.profile.lname) && ($scope.profile.lname !='') )                
+                    d['lname']=$scope.profile.lname;
+                if( ($scope.profileDetail.data.email != $scope.profile.email) && ($scope.profile.email !='') )
+                    d['email']=$scope.profile.email;
+                if( ($scope.profileDetail.data.address != $scope.profile.address) && ($scope.profile.address!='') )
+                    d['address']=$scope.profile.address;
+                if( ($scope.profileDetail.data.city != $scope.profile.city) && ($scope.profile.city !='') )
+                    d['city']=$scope.profile.city;
+                if( ($scope.profileDetail.data.country != $scope.profile.country) && ($scope.profile.country !='') )
+                    d['country']=$scope.profile.country;
+                if( ($scope.profileDetail.data.postal_code != $scope.profile.postal_code) && ($scope.profile.postal_code !='') )
+                    d['postal_code']=$scope.profile.postal_code;
+                if( (c !='') )
+                    d['coordinates']=c;
+
+            }
 
             var url = "http://" + AuthToken.host + ":" + AuthToken.port + "/api/user/" + String(x) 
             
@@ -134,16 +147,7 @@
             if (d != null ){
             $http(req)
                 .then(function(data){
-                    
-                    // $scope.prevExists = data.data['previous'];
-                    // $scope.nextExists = data.data['next'];
-                    // if (data.count == 0)
-                    // { $scope.currentPage = 0; }
-                    // else 
-                    // {
-                    //     if ($scope.currentPage==null || p==0) {$scope.currentPage = 1;}
-                    // }
-                    
+                    console.log('suxxess')
                 }
                 ,
                 function(data){
@@ -155,28 +159,36 @@
                 );
 
             }
-        }
+        };
 
         
         
         $scope.profileSubmit = function(){
             console.log('sub prof' );
-            editProfile();
+            editProfile($scope.editting_password);
+
             $scope.submitted = true;
-            $scope.editting = false;
-            window.open('http://'+AuthToken.host+':'+AuthToken.port+'/#/myprofile');
+            $scope.editting_profile = false;
+            location.reload('http://'+AuthToken.host+':'+AuthToken.port+'/#/myprofile');
        };
+
         $scope.profileEdit_button = function(){
-            $scope.editting = true;
+            $scope.editting_profile = true;
+            $scope.editting_password = false;
         };
 
-        $scope.profileChange = function(){
-
-
+        $scope.passwordEdit_button = function(){
+            $scope.editting_password = true;
+            $scope.editting_profile = false;
         };
 
+        $scope.pass_check = function(){
+            if($scope.profile.password == $scope.profile.re_password)
+                $scope.disableSubmit = false;
+            else
+                $scope.disableSubmit = true;
 
-
+        };
 
         // $scope.editting = false;
         renderProfile();

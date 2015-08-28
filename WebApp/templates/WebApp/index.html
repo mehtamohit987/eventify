@@ -51,7 +51,7 @@
                        
                            <div style="padding-top: 10px; padding-left:30px; padding-right:30px;" class="search-box row-fluid form-inline input-append">
                                
-                               <input id="titleQueryBox" class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" ng-model-options='{ debounce: 2000 }' placeholder="Event Search" ng-change="queryChanged()" list="autocompletelist">
+                               <input id="titleQueryBox" class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" ng-model-options='{ debounce: 750 }' placeholder="Event Search" ng-change="queryChanged()" list="autocompletelist">
 
                                <datalist id="autocompletelist">
                                <option ng-repeat="auto in autocompletelist | limitTo: 5">{{auto}}<option>
@@ -182,15 +182,16 @@
                                           <div class="form-group">
                                               <div class="input-group">
                                                   <div class="input-group-addon">@<i class="fa fa-at"></i></div>
-                                                  <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email" ng-model = "rmodel.email" required >
+                                                  <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email" ng-model = "rmodel.email" required ng-change="get_email_availability()" ng-model-options='{ debounce: 1500 }'>
                                               </div>
                                               <span class="input-help" data-error='0' id="remail-error"> </span>
+                                              <span ng-if="!regEmailAvailable">An account has been already registered with this email id.</span>
                                           </div>
 
                                           <div class="form-group">
                                               <div class="input-group">
                                                   <div class="input-group-addon">P<i class="fa fa-at"></i></div>
-                                                  <input type="text" class="form-control" id="rpassword" placeholder="Password" ng-model = "rmodel.password" password-validate required >
+                                                  <input type="password" class="form-control" id="rpassword" placeholder="Password" ng-model = "rmodel.password" password-validate required >
                                               </div>
                                               <span class="help-block has-error" data-error='0' id="password-error"></span>
                                           </div>
