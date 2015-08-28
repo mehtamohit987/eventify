@@ -96,7 +96,7 @@
         	y = AuthToken.get_token();
             
             console.log($scope.coordinates);
-            var c = (($scope.coordinates==null||$scope.coordinates=="") ? '' : '&latitude=' + String(AuthToken.roundit($scope.coordinates['latitude'], 6)) + '&longitude=' + String(AuthToken.roundit($scope.coordinates['longitude'], 6)) );
+            var c = (($scope.coordinates==null||$scope.coordinates=="") ? '' : String(AuthToken.roundit($scope.coordinates['latitude'], 6)) + ', ' + String(AuthToken.roundit($scope.coordinates['longitude'], 6)) );
             console.log(c);
             // $scope.latitude = c.slice(11,19);
             // $scope.longitude = String(AuthToken.roundit($scope.coordinates['longitude'], 6));

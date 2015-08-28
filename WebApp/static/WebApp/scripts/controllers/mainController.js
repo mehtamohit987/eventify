@@ -161,7 +161,7 @@
                             (function ($) {
                                 $('.close').trigger("click");
                               })(jQuery);
-                            window.setInterval(function(){$scope.registered=false;}, 500);
+                            window.setInterval(function(){$scope.registered=false;}, 750);
                         }
                         else{
                             console.log("reg error");

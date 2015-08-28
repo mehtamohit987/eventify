@@ -141,7 +141,7 @@ def autocomplete(request):
 
 		suggestions_set = set(suggestions)
 
-		suggestions_final = list(suggestions_set)[:15]
+		suggestions_final = list(suggestions_set)[:50]
 
 		the_data = {
 			'results': suggestions
