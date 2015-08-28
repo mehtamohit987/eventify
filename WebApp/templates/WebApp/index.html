@@ -51,7 +51,7 @@
                        
                            <div style="padding-top: 10px; padding-left:30px; padding-right:30px;" class="search-box row-fluid form-inline input-append">
                                
-                               <input id="titleQueryBox" class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" ng-model-options='{ debounce: 2000 }' placeholder="Event Search" ng-change="queryChanged()" list="autocompletelist">
+                               <input id="titleQueryBox" class = "input-xlarge form-control" style="width:480px;" ng-model="titleQuery" ng-model-options='{ debounce: 750 }' placeholder="Event Search" ng-change="queryChanged()" list="autocompletelist">
 
                                <datalist id="autocompletelist">
                                <option ng-repeat="auto in autocompletelist | limitTo: 5">{{auto}}<option>
@@ -164,33 +164,34 @@
                                       &nbsp;&nbsp;
                                       <span ng-if="reg_complete == false" id="registration_fail" class="response_error"  style="display: none;">Registration failed, please try again.</span>
                                       <div class="clearfix"></div>
-                                      <form>
+                                      <form name="form" id = "registerForm">
                                           <div class="form-group">
                                               <div class="input-group">
-                                                  <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                                  <div class="input-group-addon">F<i class="fa fa-user"></i></div>
                                                   <input type="text" class="form-control" id="fname" placeholder="First Name" ng-model = "rmodel.fname" >
                                               </div>
                                               <span class="help-block has-error" data-error='0' id="username-error"></span>
                                           </div>
                                           <div class="form-group">
                                               <div class="input-group">
-                                                  <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                                  <div class="input-group-addon">L<i class="fa fa-user"></i></div>
                                                   <input type="text" class="form-control" id="lname" placeholder="Last Name" ng-model = "rmodel.lname" >
                                               </div>
                                               <span class="help-block has-error" data-error='0' id="username-error"></span>
                                           </div>
                                           <div class="form-group">
                                               <div class="input-group">
-                                                  <div class="input-group-addon"><i class="fa fa-at"></i></div>
-                                                  <input type="text" class="form-control" id="remail" placeholder="Email" ng-model = "rmodel.email" required>
+                                                  <div class="input-group-addon">@<i class="fa fa-at"></i></div>
+                                                  <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email" ng-model = "rmodel.email" required ng-change="get_email_availability()" ng-model-options='{ debounce: 1500 }'>
                                               </div>
-                                              <span class="help-block has-error" data-error='0' id="remail-error"></span>
+                                              <span class="input-help" data-error='0' id="remail-error"> </span>
+                                              <span ng-if="!regEmailAvailable">An account has been already registered with this email id.</span>
                                           </div>
 
                                           <div class="form-group">
                                               <div class="input-group">
-                                                  <div class="input-group-addon"><i class="fa fa-at"></i></div>
-                                                  <input type="text" class="form-control" id="rpassword" placeholder="Password" ng-model = "rmodel.password" required>
+                                                  <div class="input-group-addon">P<i class="fa fa-at"></i></div>
+                                                  <input type="password" class="form-control" id="rpassword" placeholder="Password" ng-model = "rmodel.password" password-validate required >
                                               </div>
                                               <span class="help-block has-error" data-error='0' id="password-error"></span>
                                           </div>
@@ -257,6 +258,11 @@
     <script src="{% static 'WebApp/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'WebApp/scripts/md5.js' %}"></script>
 
+    <!-- // <script src="{% static 'WebApp/scripts/additional-methods.js' %}"></script> -->
+    <script src="{% static 'WebApp/scripts/jquery.validate.js' %}"></script>
+    <script src="{% static 'WebApp/scripts/registerValidation.js' %}"></script>
+
+
     <script src="{% static 'WebApp/scripts/app.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/mainController.js' %}"></script>
     <script type="text/javascript" src= "{% static 'WebApp/scripts/services/AuthToken.js' %}"></script>
@@ -264,6 +270,7 @@
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myfavController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/searchController.js' %}"></script>
     <script type="text/javascript" src="{% static 'WebApp/scripts/controllers/myprofileController.js' %}"></script>
+
 
 </body>
 

@@ -1,6 +1,8 @@
 <div style="margin-left:10%;">
-<h2> Your Favourites  </h2>
-
+<div ng-if = "!loggedIn" style = "text-align:center">
+    <h2>Please Login to see your favourited events.</h2>
+</div>
+<h2  ng-if = "loggedIn" > Your Favourites  </h2>
 <div class="event" ng-repeat="fav in favs" ng-if="loggedIn">
     <div class="row">
         <div class="col-lg-12">
