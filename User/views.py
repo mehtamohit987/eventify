@@ -20,7 +20,7 @@ from Events.views import EventDetail
 import requests
 import json
 from django.http import HttpResponse
-
+import md5
 
 class UserDetail(drfme_generics.RetrieveUpdateDestroyAPIView):
 	queryset=User.objects.all()
@@ -52,7 +52,7 @@ class ObtainAuthToken(APIView):
 
 	def get(self,request,*args,**kwargs):
 		email=request.GET.get('email')
-		password=request.GET.get('password')
+		password=request.GET.get('password') #  md5.md5(  ).hexdigest()
 		if email and password:
 			users=User.objects.filter(email=email)
 			if not users:

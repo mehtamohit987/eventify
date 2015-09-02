@@ -147,9 +147,9 @@
             AuthToken.unsetEverything();
         }
 
-        $scope.login_button = function(md5pass){
+        $scope.login_button = function(){
             x = $scope.lmodel.email;
-            y = CryptoJS.MD5( $scope.lmodel.password ) ;
+            y = String ( CryptoJS.MD5( $scope.lmodel.password ) ) ;
             AuthToken.generate_token(x,y);
         };
 
@@ -163,7 +163,13 @@
             {       
                 
                 var url = "http://" + AuthToken.host + ":" + AuthToken.port +"/api/user/"
-                data = $scope.rmodel
+                
+
+                data = {
+                        'email': $scope.rmodel.email,
+                        'password': String( CryptoJS.MD5( $scope.rmodel.password ) ) 
+                    }
+
                 $http.post(url, data)
                     .success(function(data, status){
                   

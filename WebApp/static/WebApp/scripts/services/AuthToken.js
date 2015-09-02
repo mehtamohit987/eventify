@@ -4,7 +4,7 @@ angular.module('eventify')
   .factory('AuthToken', function($http, $rootScope) {
             var service = [];
             
-            service.host = 'localhost';
+            service.host = '172.16.64.128';
             service.port = '8000';
 
             service.loggedIn = false;
